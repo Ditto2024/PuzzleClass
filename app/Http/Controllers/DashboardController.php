@@ -6,5 +6,8 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return view('dashboard');
+        $user = auth()->user()->load('profile');
+
+        return view('dashboard', compact('user'));
     }
+}
