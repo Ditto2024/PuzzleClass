@@ -1,25 +1,29 @@
-<?php
+use App\Models\Quest;
+use App\Models\Puzzle;
+use App\Models\ShopItem;
 
-namespace Database\Seeders;
-
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-
-class DatabaseSeeder extends Seeder
+public function run(): void
 {
-    use WithoutModelEvents;
+    $quest = Quest::create([
+        'title' => 'Intro Puzzle',
+        'description' => 'Latihan dasar logika',
+        'reward_points' => 100,
+        'reward_xp' => 50,
+        'order' => 1
+    ]);
 
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
-    {
-        // User::factory(10)->create();
+    Puzzle::create([
+        'quest_id' => $quest->id,
+        'question' => '2 + 2 = ?',
+        'answer' => '4',
+        'hint' => 'Ini matematika dasar',
+        'order' => 1
+    ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
-    }
+    ShopItem::create([
+        'name' => 'Hint +1',
+        'type' => 'hint',
+        'value' => 1,
+        'price' => 20
+    ]);
 }
