@@ -15,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        User::created(function (User $user) {
+        User::created(function ($user) {
             Profile::create([
                 'user_id' => $user->id,
                 'level' => 1,

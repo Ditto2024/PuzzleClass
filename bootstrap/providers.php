@@ -1,11 +1,5 @@
-use App\Models\User;
-use App\Models\Profile;
+<?php
 
-public function boot(): void
-{
-    User::created(function ($user) {
-        Profile::create([
-            'user_id' => $user->id
-        ]);
-    });
-}
+return [
+    App\Providers\AppServiceProvider::class,
+];
