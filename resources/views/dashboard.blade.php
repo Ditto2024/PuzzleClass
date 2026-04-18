@@ -1,16 +1,36 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+    <div class="p-6">
+        <h1 class="text-2xl font-bold">PuzzleClass Dashboard</h1>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    {{ __("You're logged in!") }}
-                </div>
+        <p class="mt-2">Halo, {{ auth()->user()->name }}</p>
+
+        <div class="mt-6 grid grid-cols-2 gap-4">
+            <div class="border p-4 rounded">
+                <p>Level</p>
+                <p class="text-xl font-bold">
+                    {{ optional(auth()->user()->profile)->level ?? 1 }}
+                </p>
+            </div>
+
+            <div class="border p-4 rounded">
+                <p>XP</p>
+                <p class="text-xl font-bold">
+                    {{ optional(auth()->user()->profile)->xp ?? 0 }}
+                </p>
+            </div>
+
+            <div class="border p-4 rounded">
+                <p>Coins</p>
+                <p class="text-xl font-bold">
+                    {{ optional(auth()->user()->profile)->coins ?? 0 }}
+                </p>
+            </div>
+
+            <div class="border p-4 rounded">
+                <p>Points</p>
+                <p class="text-xl font-bold">
+                    {{ optional(auth()->user()->profile)->points ?? 0 }}
+                </p>
             </div>
         </div>
     </div>
