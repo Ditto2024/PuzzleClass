@@ -1,30 +1,40 @@
 <x-mobile-shell title="Profile - PuzzleClass">
+    @php
+        $xp = optional($user->profile)->xp ?? 0;
+        $level = optional($user->profile)->level ?? 1;
+        $target = $level * 200;
+        $percent = $target > 0 ? min(100, ($xp / $target) * 100) : 0;
+    @endphp
+
     <div class="px-5 pt-2 pb-28">
         <div class="text-center">
             <div class="w-24 h-24 rounded-full bg-violet-600 mx-auto shadow-lg"></div>
             <h1 class="text-3xl font-black mt-4">{{ $user->name }}</h1>
-            <p class="text-gray-400 mt-1">Level {{ optional($user->profile)->level ?? 1 }} Explorer</p>
+            <p class="text-gray-400 mt-1">Level {{ $level }} Explorer</p>
         </div>
 
         <div class="mt-5 bg-white rounded-[24px] p-5 shadow-sm">
             <div class="flex justify-between text-sm mb-2">
                 <span>XP</span>
-                <span>{{ optional($user->profile)->xp ?? 0 }} / 200</span>
+                <span>{{ $xp }} / {{ $target }}</span>
             </div>
 
             <div class="bg-gray-200 h-3 rounded-full overflow-hidden">
-                <div class="bg-violet-500 h-full rounded-full" style="width: 60%"></div>
+                <div
+                    class="bg-violet-500 h-full rounded-full transition-all duration-300"
+                    style="width: {{ $percent }}%"
+                ></div>
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4 mt-5">
             <div class="bg-white rounded-[22px] p-5 shadow-sm text-center">
-                <div class="text-3xl font-black">{{ optional($user->profile)->points ?? 0 }}</div>
+                <div class="text-3xl font-black">{{ optional($user->profile)->puzzles_solved ?? 0 }}</div>
                 <div class="text-sm text-gray-400 mt-1">Puzzle Selesai</div>
             </div>
 
             <div class="bg-white rounded-[22px] p-5 shadow-sm text-center">
-                <div class="text-3xl font-black">3 🔥</div>
+                <div class="text-3xl font-black">{{ optional($user->profile)->streak_count ?? 0 }} 🔥</div>
                 <div class="text-sm text-gray-400 mt-1">Streak</div>
             </div>
         </div>
