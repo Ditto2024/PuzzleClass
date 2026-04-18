@@ -1,104 +1,62 @@
-<x-app-layout>
-    <div class="min-h-screen bg-gray-100 pb-24">
-        <div class="max-w-md mx-auto p-4">
-            <div class="bg-white rounded-2xl shadow p-5 mb-4">
-                <p class="text-sm text-gray-500">Halo, selamat datang kembali</p>
-                <h1 class="text-2xl font-bold text-gray-900">{{ $user->name }}</h1>
+<x-mobile-shell title="Dashboard - PuzzleClass">
+    <div class="px-5 pt-2 pb-28">
+        <div class="text-[10px] tracking-[0.35em] text-gray-400 uppercase">Home Dashboard</div>
 
-                <div class="mt-4 flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-500">Level</p>
-                        <p class="text-xl font-bold">{{ $level }}</p>
-                    </div>
-
-                    <div class="text-right">
-                        <p class="text-sm text-gray-500">Coins</p>
-                        <p class="text-xl font-bold text-purple-600">
-                            {{ optional($user->profile)->coins ?? 0 }}
-                        </p>
-                    </div>
-                </div>
-
-                <div class="mt-4">
-                    <div class="flex justify-between text-sm mb-1">
-                        <span class="text-gray-500">XP</span>
-                        <span class="font-medium">{{ $currentXp }} / {{ $xpTarget }}</span>
-                    </div>
-
-                    <div class="w-full bg-gray-200 rounded-full h-3">
-                        <div
-                            class="bg-purple-600 h-3 rounded-full transition-all duration-300"
-                            style="width: {{ $xpPercent }}%;"
-                        ></div>
-                    </div>
-                </div>
-
-                <div class="mt-4 grid grid-cols-2 gap-3">
-                    <div class="bg-purple-50 rounded-xl p-4">
-                        <p class="text-sm text-gray-500">Points</p>
-                        <p class="text-xl font-bold text-gray-900">
-                            {{ optional($user->profile)->points ?? 0 }}
-                        </p>
-                    </div>
-
-                    <div class="bg-yellow-50 rounded-xl p-4">
-                        <p class="text-sm text-gray-500">Hints</p>
-                        <p class="text-xl font-bold text-gray-900">
-                            {{ optional($user->profile)->hints ?? 0 }}
-                        </p>
-                    </div>
-                </div>
+        <div class="mt-3 flex items-start justify-between">
+            <div>
+                <p class="text-sm text-gray-500">Selamat datang kembali 👋</p>
+                <h1 class="text-4xl font-black mt-1">{{ $user->name }}</h1>
             </div>
 
-            <div class="bg-white rounded-2xl shadow p-5 mb-4">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-bold">Progress Puzzle</h2>
-                    <a href="{{ route('quests.index') }}" class="text-sm text-purple-600 font-semibold">
-                        Lihat semua
-                    </a>
-                </div>
-
-                @if ($quests->count())
-                    <div class="space-y-3">
-                        @foreach ($quests as $quest)
-                            <div class="border rounded-xl p-4">
-                                <div class="flex justify-between items-start gap-3">
-                                    <div>
-                                        <h3 class="font-semibold text-gray-900">{{ $quest->title }}</h3>
-                                        <p class="text-sm text-gray-500 mt-1">{{ $quest->description }}</p>
-                                    </div>
-
-                                    <span class="text-xs px-3 py-1 rounded-full bg-green-100 text-green-700 font-medium">
-                                        Open
-                                    </span>
-                                </div>
-
-                                <div class="mt-3 flex gap-4 text-sm">
-                                    <span class="text-purple-600 font-semibold">+{{ $quest->reward_points }} poin</span>
-                                    <span class="text-yellow-600 font-semibold">+{{ $quest->reward_xp }} XP</span>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                @else
-                    <p class="text-gray-500">Belum ada quest tersedia.</p>
-                @endif
+            <div class="bg-white rounded-2xl px-4 py-3 shadow-sm min-w-[82px] text-center">
+                <div class="text-xs text-gray-400">Coins</div>
+                <div class="text-3xl font-black text-green-500">{{ optional($user->profile)->coins ?? 0 }}</div>
             </div>
         </div>
 
-        <div class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-sm">
-            <div class="max-w-md mx-auto grid grid-cols-4 text-center py-3">
-                <a href="{{ route('dashboard') }}" class="text-purple-600 font-semibold text-sm">
-                    Home
-                </a>
-                <a href="{{ route('quests.index') }}" class="text-gray-500 text-sm">
-                    Quest
-                </a>
-                <span class="text-gray-400 text-sm">Shop</span>
-                <a href="{{ route('profile.edit') }}" class="text-gray-500 text-sm">
-                    Profile
-                </a>
+        <div class="mt-5 rounded-[26px] bg-gradient-to-r from-violet-600 to-violet-400 text-white p-5 shadow-lg">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-sm opacity-80">Level {{ $level }} Explorer</p>
+                    <p class="text-4xl font-black mt-2">XP {{ $currentXp }} / {{ $xpTarget }}</p>
+                </div>
+
+                <div class="text-4xl">🔥</div>
+            </div>
+
+            <div class="mt-4 bg-white/30 h-3 rounded-full overflow-hidden">
+                <div class="h-full bg-white rounded-full" style="width: {{ $xpPercent }}%"></div>
             </div>
         </div>
+
+        <div class="grid grid-cols-2 gap-4 mt-5">
+            <div class="bg-white rounded-[24px] p-5 shadow-sm">
+                <div class="text-sm text-gray-400">Daily Reward</div>
+                <div class="text-3xl font-black mt-2">+50 Coins</div>
+                <button class="mt-4 bg-emerald-400 text-white px-5 py-2 rounded-full font-bold">Claim</button>
+            </div>
+
+            <div class="bg-white rounded-[24px] p-5 shadow-sm">
+                <div class="text-sm text-gray-400">Streak</div>
+                <div class="text-3xl font-black mt-2">3 Hari 🔥</div>
+                <div class="text-xs text-gray-400 mt-2">Jaga ritme belajarmu</div>
+            </div>
+        </div>
+
+        @if($quests->first())
+            <div class="mt-5 bg-white rounded-[24px] p-5 shadow-sm">
+                <div class="text-sm text-gray-400">Daily Mission</div>
+                <div class="flex items-center justify-between mt-1">
+                    <h3 class="text-2xl font-black">1 Puzzle • {{ $quests->first()->reward_points }} Poin</h3>
+                    <div class="text-2xl">🎯</div>
+                </div>
+
+                <div class="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+                    <div class="bg-emerald-400 h-full w-1/3 rounded-full"></div>
+                </div>
+            </div>
+        @endif
     </div>
-</x-app-layout>
+
+    <x-bottom-nav />
+</x-mobile-shell>

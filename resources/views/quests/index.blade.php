@@ -1,61 +1,45 @@
-<x-app-layout>
-    <div class="min-h-screen bg-gray-100 pb-24">
-        <div class="max-w-md mx-auto p-4">
-            <div class="bg-white rounded-2xl shadow p-5 mb-4">
-                <h1 class="text-2xl font-bold">Quest Tersedia</h1>
-                <p class="text-sm text-gray-500 mt-1">Selesaikan quest untuk mendapatkan poin dan XP.</p>
+<x-mobile-shell title="Quest - PuzzleClass">
+    <div class="px-5 pt-2 pb-28">
+        @if($quests->first())
+            <div class="bg-white rounded-[24px] p-5 shadow-sm">
+                <div class="text-sm text-gray-400">Daily Mission</div>
+                <div class="flex items-center justify-between mt-1">
+                    <h2 class="text-2xl font-black">1 Puzzle • {{ $quests->first()->reward_points }} Poin</h2>
+                    <div class="text-2xl">🎯</div>
+                </div>
+
+                <div class="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+                    <div class="bg-emerald-400 h-full w-1/3 rounded-full"></div>
+                </div>
             </div>
+        @endif
 
-            <div class="space-y-4">
-                @forelse ($quests as $quest)
-                    <div class="bg-white rounded-2xl shadow p-5">
-                        <div class="flex justify-between items-start gap-3">
-                            <div>
-                                <h2 class="font-bold text-lg">{{ $quest->title }}</h2>
-                                <p class="text-gray-500 text-sm mt-1">{{ $quest->description }}</p>
-                            </div>
+        <h1 class="text-3xl font-black mt-6 mb-4">Quest Tersedia</h1>
 
-                            <span class="text-xs px-3 py-1 rounded-full bg-green-100 text-green-700 font-medium">
-                                Open
-                            </span>
-                        </div>
+        <div class="space-y-4">
+            @foreach($quests as $index => $quest)
+                @php
+                    $states = ['Done', 'Start', 'Start'];
+                    $colors = ['bg-green-100 text-green-700', 'bg-violet-100 text-violet-600', 'bg-violet-100 text-violet-600'];
+                    $difficulty = ['Easy', 'Medium', 'Hard'];
+                    $label = $states[$index] ?? 'Start';
+                    $color = $colors[$index] ?? 'bg-violet-100 text-violet-600';
+                    $diff = $difficulty[$index] ?? 'Medium';
+                @endphp
 
-                        <div class="mt-4 flex gap-4 text-sm">
-                            <span class="px-3 py-2 rounded-lg bg-purple-50 text-purple-700 font-semibold">
-                                +{{ $quest->reward_points }} Poin
-                            </span>
-                            <span class="px-3 py-2 rounded-lg bg-yellow-50 text-yellow-700 font-semibold">
-                                +{{ $quest->reward_xp }} XP
-                            </span>
-                        </div>
-
-                        <div class="mt-4">
-                            <button class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl">
-                                Mulai Quest
-                            </button>
-                        </div>
+                <div class="bg-white rounded-[24px] p-5 shadow-sm flex items-center justify-between">
+                    <div>
+                        <div class="text-xl font-bold">{{ $quest->title }}</div>
+                        <div class="text-sm text-gray-400 mt-1">Difficulty: {{ $diff }}</div>
                     </div>
-                @empty
-                    <div class="bg-white rounded-2xl shadow p-5">
-                        <p class="text-gray-500">Belum ada quest aktif.</p>
-                    </div>
-                @endforelse
-            </div>
-        </div>
 
-        <div class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-sm">
-            <div class="max-w-md mx-auto grid grid-cols-4 text-center py-3">
-                <a href="{{ route('dashboard') }}" class="text-gray-500 text-sm">
-                    Home
-                </a>
-                <a href="{{ route('quests.index') }}" class="text-purple-600 font-semibold text-sm">
-                    Quest
-                </a>
-                <span class="text-gray-400 text-sm">Shop</span>
-                <a href="{{ route('profile.edit') }}" class="text-gray-500 text-sm">
-                    Profile
-                </a>
-            </div>
+                    <a href="{{ route('quests.show', $quest) }}" class="px-4 py-2 rounded-full text-sm font-bold {{ $color }}">
+                        {{ $label }}
+                    </a>
+                </div>
+            @endforeach
         </div>
     </div>
-</x-app-layout>
+
+    <x-bottom-nav />
+</x-mobile-shell>
