@@ -1,52 +1,51 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - PuzzleClass</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="bg-[#f3f4f6] flex items-center justify-center min-h-screen">
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+<div class="w-full max-w-[380px] px-6">
+
+    <div class="bg-white rounded-[28px] shadow-lg p-6 text-center">
+        <h1 class="text-2xl font-black">PuzzleClass</h1>
+
+        <div class="w-20 h-20 bg-violet-600 rounded-2xl mx-auto mt-6 flex items-center justify-center text-white text-3xl">
+            👤
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+        <h2 class="text-xl font-bold mt-4">Create Account</h2>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+        <form method="POST" action="{{ route('register') }}" class="mt-6 space-y-4">
+            @csrf
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
+            <input type="text" name="name" placeholder="Nama"
+                class="w-full rounded-xl border px-4 py-3">
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+            <input type="email" name="email" placeholder="Email"
+                class="w-full rounded-xl border px-4 py-3">
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+            <input type="password" name="password" placeholder="Password"
+                class="w-full rounded-xl border px-4 py-3">
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
+            <input type="password" name="password_confirmation" placeholder="Konfirmasi Password"
+                class="w-full rounded-xl border px-4 py-3">
 
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
+            <button class="w-full bg-black text-white rounded-xl py-3 font-bold">
+                Daftar
+            </button>
+        </form>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
+        <p class="text-sm text-gray-500 mt-4">
+            Sudah punya akun?
+            <a href="{{ route('login') }}" class="text-violet-600 font-bold">Masuk</a>
+        </p>
+    </div>
 
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+</div>
+
+</body>
+</html>

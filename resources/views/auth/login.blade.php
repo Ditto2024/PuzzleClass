@@ -1,54 +1,47 @@
-<x-mobile-shell title="Login - PuzzleClass">
-    <div class="px-6 pt-2 pb-28">
-        <div class="text-[10px] tracking-[0.35em] text-gray-400 uppercase">Login Screen</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - PuzzleClass</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="bg-[#f3f4f6] flex items-center justify-center min-h-screen">
 
-        <div class="flex items-start justify-between mt-3">
-            <div>
-                <h1 class="text-4xl font-black leading-none">PuzzleClass</h1>
-                <p class="text-sm text-gray-500 mt-1">Solve • Think • Escape</p>
-            </div>
+<div class="w-full max-w-[380px] px-6">
 
-            <div class="w-14 h-14 bg-violet-600 rounded-2xl flex items-center justify-center text-2xl shadow-lg">
-                🍩
-            </div>
+    <div class="bg-white rounded-[28px] shadow-lg p-6 text-center">
+        <h1 class="text-2xl font-black">PuzzleClass</h1>
+        <p class="text-gray-400 mt-1 text-sm">Solve • Think • Escape</p>
+
+        <div class="w-20 h-20 bg-violet-600 rounded-2xl mx-auto mt-6 flex items-center justify-center text-white text-3xl">
+            👤
         </div>
 
-        <div class="mt-7 rounded-[28px] bg-white shadow-md px-6 py-8 text-center">
-            <div class="w-20 h-20 mx-auto rounded-3xl bg-violet-600 flex items-center justify-center text-4xl shadow-lg">
-                👤
-            </div>
+        <h2 class="text-xl font-bold mt-4">Welcome Back</h2>
+        <p class="text-gray-400 text-sm">Masuk untuk melanjutkan puzzle</p>
 
-            <h2 class="mt-5 text-3xl font-bold">Welcome Back</h2>
-            <p class="mt-2 text-sm text-gray-500">Masuk untuk melanjutkan puzzle harianmu</p>
-        </div>
-
-        <form method="POST" action="{{ route('login') }}" class="mt-5 space-y-4">
+        <form method="POST" action="{{ route('login') }}" class="mt-6 space-y-4">
             @csrf
 
-            <div class="bg-white rounded-[20px] border border-gray-100 px-4 py-3 shadow-sm">
-                <label class="block text-xs text-gray-400 mb-1">Username</label>
-                <input name="email" type="email" value="{{ old('email') }}" class="w-full border-0 p-0 focus:ring-0 font-semibold text-gray-700" placeholder="ditto.class" required autofocus>
-            </div>
+            <input type="email" name="email" placeholder="Email"
+                class="w-full rounded-xl border px-4 py-3 focus:outline-none">
 
-            <div class="bg-white rounded-[20px] border border-gray-100 px-4 py-3 shadow-sm">
-                <label class="block text-xs text-gray-400 mb-1">Password</label>
-                <input name="password" type="password" class="w-full border-0 p-0 focus:ring-0 font-semibold text-gray-700" placeholder="••••••••" required>
-            </div>
+            <input type="password" name="password" placeholder="Password"
+                class="w-full rounded-xl border px-4 py-3 focus:outline-none">
 
-            <button class="w-full bg-black text-white rounded-[18px] py-4 font-bold shadow-md">
+            <button class="w-full bg-black text-white rounded-xl py-3 font-bold">
                 Masuk
             </button>
         </form>
 
-        <div class="mt-4">
-            <a href="{{ route('register') }}" class="w-full block text-center bg-white rounded-[18px] py-4 font-semibold shadow-sm">
-                Masuk dengan Google
-            </a>
-        </div>
-
-        <div class="text-center mt-5 text-sm text-gray-400">
+        <p class="text-sm text-gray-500 mt-4">
             Belum punya akun?
-            <a href="{{ route('register') }}" class="text-violet-600 font-semibold">Daftar</a>
-        </div>
+            <a href="{{ route('register') }}" class="text-violet-600 font-bold">Daftar</a>
+        </p>
     </div>
-</x-mobile-shell>
+
+</div>
+
+</body>
+</html>
