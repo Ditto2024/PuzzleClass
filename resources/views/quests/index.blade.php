@@ -1,7 +1,9 @@
 <x-mobile-shell title="Quest - PuzzleClass">
     <div class="px-5 pt-2 pb-28">
+        <div class="text-[10px] tracking-[0.35em] text-gray-400 uppercase">Quest Screen</div>
+
         @if($quests->first())
-            <div class="bg-white rounded-[24px] p-5 shadow-sm">
+            <div class="mt-4 bg-white rounded-[24px] p-5 shadow-sm">
                 <div class="text-sm text-gray-400">Daily Mission</div>
                 <div class="flex items-center justify-between mt-1">
                     <h2 class="text-2xl font-black">1 Puzzle • {{ $quests->first()->reward_points }} Poin</h2>
@@ -17,25 +19,39 @@
         <h1 class="text-3xl font-black mt-6 mb-4">Quest Tersedia</h1>
 
         <div class="space-y-4">
-            @foreach($quests as $index => $quest)
+            @foreach($quests as $quest)
                 @php
-                    $states = ['Done', 'Start', 'Start'];
-                    $colors = ['bg-green-100 text-green-700', 'bg-violet-100 text-violet-600', 'bg-violet-100 text-violet-600'];
-                    $difficulty = ['Easy', 'Medium', 'Hard'];
-                    $label = $states[$index] ?? 'Start';
-                    $color = $colors[$index] ?? 'bg-violet-100 text-violet-600';
-                    $diff = $difficulty[$index] ?? 'Medium';
+                    $btnClass = match($quest->ui_status ?? 'Start') {
+                        'Done' => 'bg-green-100 text-green-700',
+                        'Locked' => 'bg-gray-200 text-gray-500',
+                        default => 'bg-violet-100 text-violet-600',
+                    };
                 @endphp
 
-                <div class="bg-white rounded-[24px] p-5 shadow-sm flex items-center justify-between">
-                    <div>
-                        <div class="text-xl font-bold">{{ $quest->title }}</div>
-                        <div class="text-sm text-gray-400 mt-1">Difficulty: {{ $diff }}</div>
+                <div class="bg-white rounded-[24px] p-5 shadow-sm">
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <div class="text-xl font-bold">{{ $quest->title }}</div>
+                            <div class="text-sm text-gray-400 mt-1">{{ $quest->description }}</div>
+                        </div>
+
+                        @if(($quest->ui_status ?? 'Start') === 'Locked')
+                            <span class="px-4 py-2 rounded-full text-sm font-bold {{ $btnClass }}">
+                                Locked
+                            </span>
+                        @else
+                            <a href="{{ route('quests.show', $quest) }}" class="px-4 py-2 rounded-full text-sm font-bold {{ $btnClass }}">
+                                {{ $quest->ui_status ?? 'Start' }}
+                            </a>
+                        @endif
                     </div>
 
-                    <a href="{{ route('quests.show', $quest) }}" class="px-4 py-2 rounded-full text-sm font-bold {{ $color }}">
-                        {{ $label }}
-                    </a>
+                    <div class="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+                        <div
+                            class="bg-emerald-400 h-full rounded-full"
+                            style="width: {{ $quest->progress_percent ?? 0 }}%"
+                        ></div>
+                    </div>
                 </div>
             @endforeach
         </div>

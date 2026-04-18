@@ -27,8 +27,15 @@
                 <div class="bg-white rounded-[22px] p-4 shadow-sm flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div class="text-2xl">
-                            @if($index === 0) 🥇 @elseif($index === 1) 🥈 @else 🥉 @endif
+                            @if($index === 0)
+                                🥇
+                            @elseif($index === 1)
+                                🥈
+                            @else
+                                🥉
+                            @endif
                         </div>
+
                         <div>
                             <div class="font-bold text-lg">{{ $leader->name }}</div>
                             <div class="text-sm text-gray-400">{{ optional($leader->profile)->points ?? 0 }} pts</div>
