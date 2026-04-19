@@ -12,16 +12,15 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
-
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // ✅ TAMBAHKAN INI
     Route::post('/daily-reward', [DashboardController::class, 'claimDailyReward'])
         ->name('daily-reward.claim');
 
     Route::get('/quests', [QuestController::class, 'index'])->name('quests.index');
     Route::get('/quests/{quest}', [QuestController::class, 'show'])->name('quests.show');
     Route::post('/puzzle/{puzzle}/answer', [QuestController::class, 'answer'])->name('puzzle.answer');
+    Route::post('/puzzle/{puzzle}/hint', [QuestController::class, 'useHint'])->name('puzzle.hint');
 
     Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
     Route::post('/shop/{item}/buy', [ShopController::class, 'buy'])->name('shop.buy');

@@ -43,6 +43,10 @@ class DashboardController extends Controller
         $user = auth()->user()->load('profile');
         $profile = $user->profile;
 
+        if (! $profile) {
+            return back()->with('error', 'Profile user belum ditemukan.');
+        }
+
         if ($profile->last_daily_reward_claimed_at && $profile->last_daily_reward_claimed_at->isToday()) {
             return back()->with('error', 'Daily reward hari ini sudah diambil.');
         }
@@ -57,6 +61,6 @@ class DashboardController extends Controller
         $profile->last_daily_reward_claimed_at = now();
         $profile->save();
 
-        return back()->with('success', 'Daily reward +50 coins berhasil di-claim.');
+        return redirect()->route('dashboard')->with('success', 'Daily reward +50 coins berhasil di-claim.');
     }
 }
