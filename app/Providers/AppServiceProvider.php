@@ -23,6 +23,9 @@ class AppServiceProvider extends ServiceProvider
                 'coins' => 100,
                 'points' => 0,
                 'hints' => 3,
+                'streak_count' => 0,
+                'puzzles_solved' => 0,
+                'time_bonus_seconds' => 0,
             ]);
         });
     }

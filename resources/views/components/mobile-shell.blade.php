@@ -10,10 +10,6 @@
 </head>
 <body class="bg-[#eaf3fb] min-h-screen">
     <div class="max-w-[380px] mx-auto min-h-screen bg-[#f7f7f8] relative shadow-2xl overflow-hidden">
-        <div class="h-7"></div>
-
-        <div class="w-32 h-7 bg-black rounded-full mx-auto mb-3"></div>
-
         {{ $slot }}
     </div>
 </body>

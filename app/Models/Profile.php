@@ -16,6 +16,17 @@ class Profile extends Model
         'coins',
         'points',
         'hints',
+        'streak_count',
+        'puzzles_solved',
+        'time_bonus_seconds',
+        'last_daily_reward_claimed_at',
+        'last_puzzle_played_at',
+        'avatar',
+    ];
+
+    protected $casts = [
+        'last_daily_reward_claimed_at' => 'datetime',
+        'last_puzzle_played_at' => 'datetime',
     ];
 
     public function user()

@@ -1,14 +1,26 @@
 <x-mobile-shell title="Profile - PuzzleClass">
     @php
-        $xp = optional($user->profile)->xp ?? 0;
-        $level = optional($user->profile)->level ?? 1;
+        $profile = $user->profile;
+        $xp = $profile->xp ?? 0;
+        $level = $profile->level ?? 1;
         $target = $level * 200;
         $percent = $target > 0 ? min(100, ($xp / $target) * 100) : 0;
     @endphp
 
-    <div class="px-5 pt-2 pb-28">
+    <div class="px-5 pt-6 pb-28">
         <div class="text-center">
-            <div class="w-24 h-24 rounded-full bg-violet-600 mx-auto shadow-lg"></div>
+            @if($profile && $profile->avatar)
+                <img
+                    src="{{ asset('storage/' . $profile->avatar) }}"
+                    alt="Avatar"
+                    class="w-24 h-24 rounded-full object-cover mx-auto shadow-lg"
+                >
+            @else
+                <div class="w-24 h-24 rounded-full bg-gradient-to-br from-violet-600 to-violet-400 mx-auto shadow-lg flex items-center justify-center text-white text-3xl">
+                    👤
+                </div>
+            @endif
+
             <h1 class="text-3xl font-black mt-4">{{ $user->name }}</h1>
             <p class="text-gray-400 mt-1">Level {{ $level }} Explorer</p>
         </div>
@@ -29,12 +41,12 @@
 
         <div class="grid grid-cols-2 gap-4 mt-5">
             <div class="bg-white rounded-[22px] p-5 shadow-sm text-center">
-                <div class="text-3xl font-black">{{ optional($user->profile)->puzzles_solved ?? 0 }}</div>
+                <div class="text-3xl font-black">{{ $profile->puzzles_solved ?? 0 }}</div>
                 <div class="text-sm text-gray-400 mt-1">Puzzle Selesai</div>
             </div>
 
             <div class="bg-white rounded-[22px] p-5 shadow-sm text-center">
-                <div class="text-3xl font-black">{{ optional($user->profile)->streak_count ?? 0 }} 🔥</div>
+                <div class="text-3xl font-black">{{ $profile->streak_count ?? 0 }} 🔥</div>
                 <div class="text-sm text-gray-400 mt-1">Streak</div>
             </div>
         </div>
