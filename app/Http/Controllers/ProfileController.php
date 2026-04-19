@@ -77,7 +77,7 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-    public function showGameProfile()
+    public function showGameProfile(): View
     {
         $user = auth()->user()->load('profile');
 
