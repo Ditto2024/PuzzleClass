@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Quest;
+use App\Models\UserPuzzleAttempt;
 
 class DashboardController extends Controller
 {
     public function index()
     {
         $user = auth()->user()->load('profile');
+        $today = now()->toDateString();
 
         $quests = Quest::with('puzzles')
             ->where('is_active', true)
@@ -16,8 +18,21 @@ class DashboardController extends Controller
             ->take(3)
             ->get();
 
-        $profile = $user->profile;
+        foreach ($quests as $quest) {
+            $questPuzzleIds = $quest->puzzles->pluck('id');
+            $solvedToday = UserPuzzleAttempt::where('user_id', $user->id)
+                ->whereIn('puzzle_id', $questPuzzleIds)
+                ->where('is_correct', true)
+                ->whereDate('created_at', $today)
+                ->distinct('puzzle_id')
+                ->count('puzzle_id');
 
+            $quest->daily_progress_percent = $quest->puzzles->count() > 0
+                ? intval(($solvedToday / $quest->puzzles->count()) * 100)
+                : 0;
+        }
+
+        $profile = $user->profile;
         $currentXp = $profile->xp ?? 0;
         $level = $profile->level ?? 1;
         $xpTarget = $level * 200;

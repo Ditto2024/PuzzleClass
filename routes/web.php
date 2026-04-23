@@ -17,6 +17,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/quests', [QuestController::class, 'index'])->name('quests.index');
     Route::get('/quests/{quest}', [QuestController::class, 'show'])->name('quests.show');
+    Route::get('/quests/{quest}/complete', [QuestController::class, 'complete'])->name('quests.complete');
     Route::post('/puzzle/{puzzle}/answer', [QuestController::class, 'answer'])->name('puzzle.answer');
     Route::post('/puzzle/{puzzle}/hint', [QuestController::class, 'useHint'])->name('puzzle.hint');
 

@@ -3,6 +3,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <h1 class="text-4xl font-black">Leaderboard</h1>
+                <p class="text-sm text-gray-400 mt-1">Urut berdasarkan Points lalu XP</p>
             </div>
 
             <a href="{{ route('profile.page') }}" class="bg-white rounded-full px-4 py-2 shadow-sm text-sm">
@@ -15,7 +16,9 @@
             <div class="flex justify-between items-center mt-2">
                 <div>
                     <div class="text-4xl font-black">#{{ $rank ?? '-' }} {{ $user->name }}</div>
-                    <div class="text-green-500 font-semibold mt-1">Naik 1 peringkat ↑</div>
+                    <div class="text-green-500 font-semibold mt-1">
+                        {{ optional($user->profile)->points ?? 0 }} pts • {{ optional($user->profile)->xp ?? 0 }} xp
+                    </div>
                 </div>
                 <div class="text-4xl">🏅</div>
             </div>
@@ -28,13 +31,16 @@
                         <div class="text-2xl">
                             @if($index === 0) 🥇
                             @elseif($index === 1) 🥈
-                            @else 🥉
+                            @elseif($index === 2) 🥉
+                            @else #{{ $index + 1 }}
                             @endif
                         </div>
 
                         <div>
                             <div class="font-bold text-lg">{{ $leader->name }}</div>
-                            <div class="text-sm text-gray-400">{{ optional($leader->profile)->points ?? 0 }} pts</div>
+                            <div class="text-sm text-gray-400">
+                                {{ optional($leader->profile)->points ?? 0 }} pts • {{ optional($leader->profile)->xp ?? 0 }} xp
+                            </div>
                         </div>
                     </div>
 

@@ -4,19 +4,7 @@
             <div class="bg-white rounded-[28px] p-8 shadow-sm mt-6 text-center">
                 <div class="text-5xl">🏆</div>
                 <h1 class="text-3xl font-black mt-4">Quest Selesai</h1>
-                <p class="text-gray-500 mt-2">{{ $quest->title }} sudah kamu tuntaskan.</p>
-
-                @if(session('success'))
-                    <div class="mt-4 bg-green-50 text-green-700 rounded-[20px] p-4 shadow-sm font-semibold">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
-                @if(session('error'))
-                    <div class="mt-4 bg-red-50 text-red-600 rounded-[20px] p-4 shadow-sm font-semibold">
-                        {{ session('error') }}
-                    </div>
-                @endif
+                <p class="text-gray-500 mt-2">{{ $quest->title }} sudah kamu tuntaskan hari ini.</p>
 
                 <a href="{{ route('quests.index') }}" class="mt-5 inline-flex bg-black text-white rounded-[18px] px-6 py-3 font-bold">
                     Kembali ke Quest
@@ -26,6 +14,7 @@
             <div class="flex items-start justify-between">
                 <div>
                     <h1 class="text-4xl font-black leading-tight">Puzzle<br>Question</h1>
+                    <p class="text-sm text-gray-400 mt-2">Soal {{ $currentStep }}/{{ $totalSteps }}</p>
                 </div>
 
                 <div class="bg-emerald-400 rounded-[24px] px-5 py-4 text-center shadow-sm">
@@ -45,6 +34,11 @@
                     {{ session('error') }}
                 </div>
             @endif
+
+            <div class="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div class="bg-violet-500 h-full rounded-full transition-all duration-300"
+                     style="width: {{ intval(($currentStep / $totalSteps) * 100) }}%"></div>
+            </div>
 
             <div class="grid grid-cols-2 gap-4 mt-5">
                 <div class="bg-white rounded-[24px] p-4 shadow-sm">
@@ -102,6 +96,30 @@
     </div>
 
     <x-bottom-nav />
+
+    <audio id="sound-correct" preload="auto">
+        <source src="data:audio/wav;base64,UklGRlQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YTAAAAA=" type="audio/wav">
+    </audio>
+
+    <audio id="sound-wrong" preload="auto">
+        <source src="data:audio/wav;base64,UklGRlQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YTAAAAA=" type="audio/wav">
+    </audio>
+
+    @if(session('answer_state'))
+        <script>
+            window.addEventListener('DOMContentLoaded', () => {
+                const state = @json(session('answer_state'));
+                const sound = state === 'correct'
+                    ? document.getElementById('sound-correct')
+                    : document.getElementById('sound-wrong');
+
+                if (sound) {
+                    sound.volume = 0.5;
+                    sound.play().catch(() => {});
+                }
+            });
+        </script>
+    @endif
 
     @if(!$questCompleted)
         <script>

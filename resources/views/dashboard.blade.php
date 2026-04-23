@@ -64,12 +64,21 @@
             <div class="mt-5 bg-white rounded-[24px] p-5 shadow-sm">
                 <div class="text-sm text-gray-400">Daily Mission</div>
                 <div class="flex items-center justify-between mt-1">
-                    <h3 class="text-2xl font-black">1 Puzzle • {{ $quests->first()->reward_points }} Poin</h3>
+                    <h3 class="text-2xl font-black">{{ $quests->first()->title }}</h3>
                     <div class="text-2xl">🎯</div>
                 </div>
 
+                <div class="text-sm text-gray-500 mt-1">
+                    {{ $quests->first()->reward_points }} poin • {{ $quests->first()->puzzles->count() }} soal
+                </div>
+
                 <div class="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
-                    <div class="bg-emerald-400 h-full w-1/3 rounded-full"></div>
+                    <div class="bg-emerald-400 h-full rounded-full"
+                         style="width: {{ $quests->first()->daily_progress_percent ?? 0 }}%"></div>
+                </div>
+
+                <div class="text-xs text-gray-400 mt-2">
+                    Progress hari ini: {{ $quests->first()->daily_progress_percent ?? 0 }}%
                 </div>
             </div>
         @endif
@@ -97,7 +106,8 @@
                         </div>
 
                         <div class="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
-                            <div class="bg-emerald-400 h-full w-1/3 rounded-full"></div>
+                            <div class="bg-emerald-400 h-full rounded-full"
+                                 style="width: {{ $quest->daily_progress_percent ?? 0 }}%"></div>
                         </div>
                     </div>
                 @empty
