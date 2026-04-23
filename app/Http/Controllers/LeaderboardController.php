@@ -12,7 +12,16 @@ class LeaderboardController extends Controller
 
         $leaders = User::with('profile')
             ->get()
-            ->sortByDesc(fn ($u) => optional($u->profile)->points ?? 0)
+            ->sort(function ($a, $b) {
+                $pointsA = optional($a->profile)->points ?? 0;
+                $pointsB = optional($b->profile)->points ?? 0;
+
+                if ($pointsA === $pointsB) {
+                    return (optional($b->profile)->xp ?? 0) <=> (optional($a->profile)->xp ?? 0);
+                }
+
+                return $pointsB <=> $pointsA;
+            })
             ->values();
 
         $rank = $leaders->search(fn ($u) => $u->id === $user->id);

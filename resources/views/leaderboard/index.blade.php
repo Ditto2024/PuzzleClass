@@ -1,9 +1,8 @@
 <x-mobile-shell title="Leaderboard - PuzzleClass">
-    <div class="px-5 pt-2 pb-28">
+    <div class="px-5 pt-6 pb-28">
         <div class="flex items-center justify-between">
             <div>
-                <div class="text-[10px] tracking-[0.35em] text-gray-400 uppercase">Leaderboard</div>
-                <h1 class="text-4xl font-black mt-3">Leaderboard</h1>
+                <h1 class="text-4xl font-black">Leaderboard</h1>
             </div>
 
             <a href="{{ route('profile.page') }}" class="bg-white rounded-full px-4 py-2 shadow-sm text-sm">
@@ -27,12 +26,9 @@
                 <div class="bg-white rounded-[22px] p-4 shadow-sm flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div class="text-2xl">
-                            @if($index === 0)
-                                🥇
-                            @elseif($index === 1)
-                                🥈
-                            @else
-                                🥉
+                            @if($index === 0) 🥇
+                            @elseif($index === 1) 🥈
+                            @else 🥉
                             @endif
                         </div>
 

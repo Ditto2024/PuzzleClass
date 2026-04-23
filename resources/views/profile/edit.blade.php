@@ -8,7 +8,6 @@
                     class="w-24 h-24 rounded-full object-cover mx-auto shadow-lg border-4 border-white"
                     onerror="this.style.display='none'; document.getElementById('avatar-fallback-edit').style.display='flex';"
                 >
-
                 <div
                     id="avatar-fallback-edit"
                     class="w-24 h-24 rounded-full bg-violet-600 mx-auto shadow-lg items-center justify-center text-white text-3xl"

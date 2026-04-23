@@ -9,7 +9,6 @@
 <body class="bg-[#f3f4f6] flex items-center justify-center min-h-screen">
 
 <div class="w-full max-w-[380px] px-6">
-
     <div id="register-card" class="bg-white rounded-[28px] shadow-lg p-6 text-center opacity-0 translate-y-6 transition-all duration-700">
         <h1 class="text-2xl font-black">PuzzleClass</h1>
 
@@ -87,7 +86,6 @@
             <a href="{{ route('login') }}" class="text-violet-600 font-bold">Masuk</a>
         </p>
     </div>
-
 </div>
 
 <script>

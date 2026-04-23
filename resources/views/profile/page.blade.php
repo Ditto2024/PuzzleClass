@@ -16,7 +16,6 @@
                     class="w-24 h-24 rounded-full object-cover mx-auto shadow-lg border-4 border-white"
                     onerror="this.style.display='none'; document.getElementById('avatar-fallback-page').style.display='flex';"
                 >
-
                 <div
                     id="avatar-fallback-page"
                     class="w-24 h-24 rounded-full bg-gradient-to-br from-violet-600 to-violet-400 mx-auto shadow-lg items-center justify-center text-white text-3xl"

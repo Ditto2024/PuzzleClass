@@ -45,6 +45,6 @@ class Profile extends Model
             return null;
         }
 
-        return Storage::disk('public')->url($this->avatar);
+        return Storage::url($this->avatar);
     }
 }

@@ -22,7 +22,7 @@ class QuestController extends Controller
 
         $previousQuestDone = true;
 
-        foreach ($quests as $index => $quest) {
+        foreach ($quests as $quest) {
             $questPuzzleIds = $quest->puzzles->pluck('id')->toArray();
             $questTotal = count($questPuzzleIds);
             $solvedCount = count(array_intersect($questPuzzleIds, $solvedPuzzleIds));
@@ -186,20 +186,9 @@ class QuestController extends Controller
             $profile->save();
         }
 
-        $nextPuzzle = $quest->puzzles()
-            ->where('order', '>', $puzzle->order)
-            ->orderBy('order')
-            ->first();
-
-        if ($nextPuzzle) {
-            return redirect()
-                ->route('quests.show', $quest)
-                ->with('success', 'Benar! +' . $earnedPoints . ' poin • +50 XP • +20 Coins');
-        }
-
         return redirect()
             ->route('quests.show', $quest)
-            ->with('success', 'Quest selesai! +' . $earnedPoints . ' poin');
+            ->with('success', $quest->puzzles()->count() > 1 ? 'Benar! Lanjut ke puzzle berikutnya.' : 'Benar! Quest selesai.');
     }
 
     private function buildAnswerOptions(?Puzzle $puzzle): array
@@ -208,16 +197,15 @@ class QuestController extends Controller
             return [];
         }
 
-        $correct = $puzzle->answer;
-
-        if ($correct === 'bbbbb') {
-            return ['aaaaa', 'bbbbb', 'ccccc'];
-        }
-
-        return [
-            $correct,
-            $correct . 'x',
-            strrev($correct),
-        ];
+        return match ($puzzle->answer) {
+            '4' => ['3', '4', '5'],
+            'xor' => ['and', 'xor', 'or'],
+            'alpha-7' => ['alpha-5', 'alpha-7', 'alpha-9'],
+            default => [
+                $puzzle->answer,
+                $puzzle->answer . 'x',
+                strrev($puzzle->answer),
+            ],
+        };
     }
 }

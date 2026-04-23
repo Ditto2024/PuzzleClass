@@ -11,6 +11,10 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        Puzzle::query()->delete();
+        Quest::query()->delete();
+        ShopItem::query()->delete();
+
         $quest1 = Quest::create([
             'title' => 'Quest 1 Awakening',
             'description' => 'Difficulty: Easy',
@@ -20,7 +24,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        Quest::create([
+        $quest2 = Quest::create([
             'title' => 'Quest 2 Logic Gate',
             'description' => 'Difficulty: Medium',
             'reward_points' => 150,
@@ -29,7 +33,7 @@ class DatabaseSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        Quest::create([
+        $quest3 = Quest::create([
             'title' => 'Quest 3 Find Code',
             'description' => 'Difficulty: Hard',
             'reward_points' => 200,
@@ -40,11 +44,31 @@ class DatabaseSeeder extends Seeder
 
         Puzzle::create([
             'quest_id' => $quest1->id,
-            'question' => 'Temukan jawaban yang tepat dari pola puzzle berikut',
-            'answer' => 'bbbbb',
-            'hint' => 'Pilih pola tengah',
+            'question' => 'Berapa hasil 2 + 2?',
+            'answer' => '4',
+            'hint' => 'Ini operasi penjumlahan dasar.',
             'time_limit' => 90,
             'bonus_points' => 50,
+            'order' => 1,
+        ]);
+
+        Puzzle::create([
+            'quest_id' => $quest2->id,
+            'question' => 'Gerbang logika yang bernilai true jika hanya salah satu input true adalah?',
+            'answer' => 'xor',
+            'hint' => 'Bukan AND dan bukan OR biasa.',
+            'time_limit' => 90,
+            'bonus_points' => 70,
+            'order' => 1,
+        ]);
+
+        Puzzle::create([
+            'quest_id' => $quest3->id,
+            'question' => 'Kode rahasia manakah yang benar?',
+            'answer' => 'alpha-7',
+            'hint' => 'Perhatikan angka tengah yang ganjil.',
+            'time_limit' => 90,
+            'bonus_points' => 100,
             'order' => 1,
         ]);
 
@@ -65,7 +89,7 @@ class DatabaseSeeder extends Seeder
         ShopItem::create([
             'name' => 'Hint Pack',
             'type' => 'hint',
-            'value' => 4,
+            'value' => 3,
             'price' => 80,
         ]);
     }

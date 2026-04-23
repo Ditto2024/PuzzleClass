@@ -1,5 +1,5 @@
 <x-mobile-shell title="Puzzle - PuzzleClass">
-    <div class="px-5 pt-2 pb-28">
+    <div class="px-5 pt-6 pb-28">
         @if($questCompleted)
             <div class="bg-white rounded-[28px] p-8 shadow-sm mt-6 text-center">
                 <div class="text-5xl">🏆</div>
@@ -11,9 +11,7 @@
                 </a>
             </div>
         @else
-            <div class="text-[10px] tracking-[0.35em] text-gray-400 uppercase">Puzzle Screen</div>
-
-            <div class="flex items-start justify-between mt-3">
+            <div class="flex items-start justify-between">
                 <div>
                     <h1 class="text-4xl font-black leading-tight">Puzzle<br>Question</h1>
                 </div>
@@ -40,9 +38,7 @@
 
             <div class="mt-5 bg-[#f8f4df] rounded-[28px] p-8 shadow-sm text-center">
                 <div class="text-6xl">🧩</div>
-                <p class="mt-5 text-2xl font-semibold text-gray-800">
-                    {{ $puzzle->question }}
-                </p>
+                <p class="mt-5 text-2xl font-semibold text-gray-800">{{ $puzzle->question }}</p>
             </div>
 
             <form id="answer-form" method="POST" action="{{ route('puzzle.answer', $puzzle) }}" class="mt-5">

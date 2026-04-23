@@ -1,9 +1,7 @@
 <x-mobile-shell title="Quest - PuzzleClass">
-    <div class="px-5 pt-2 pb-28">
-        <div class="text-[10px] tracking-[0.35em] text-gray-400 uppercase">Quest Screen</div>
-
+    <div class="px-5 pt-6 pb-28">
         @if($quests->first())
-            <div class="mt-4 bg-white rounded-[24px] p-5 shadow-sm">
+            <div class="bg-white rounded-[24px] p-5 shadow-sm">
                 <div class="text-sm text-gray-400">Daily Mission</div>
                 <div class="flex items-center justify-between mt-1">
                     <h2 class="text-2xl font-black">1 Puzzle • {{ $quests->first()->reward_points }} Poin</h2>
@@ -36,9 +34,7 @@
                         </div>
 
                         @if(($quest->ui_status ?? 'Start') === 'Locked')
-                            <span class="px-4 py-2 rounded-full text-sm font-bold {{ $btnClass }}">
-                                Locked
-                            </span>
+                            <span class="px-4 py-2 rounded-full text-sm font-bold {{ $btnClass }}">Locked</span>
                         @else
                             <a href="{{ route('quests.show', $quest) }}" class="px-4 py-2 rounded-full text-sm font-bold {{ $btnClass }}">
                                 {{ $quest->ui_status ?? 'Start' }}
@@ -47,10 +43,7 @@
                     </div>
 
                     <div class="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
-                        <div
-                            class="bg-emerald-400 h-full rounded-full"
-                            style="width: {{ $quest->progress_percent ?? 0 }}%"
-                        ></div>
+                        <div class="bg-emerald-400 h-full rounded-full" style="width: {{ $quest->progress_percent ?? 0 }}%"></div>
                     </div>
                 </div>
             @endforeach

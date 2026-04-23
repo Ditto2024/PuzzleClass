@@ -1,8 +1,6 @@
 <x-mobile-shell title="Shop - PuzzleClass">
-    <div class="px-5 pt-2 pb-28">
-        <div class="text-[10px] tracking-[0.35em] text-gray-400 uppercase">Shop</div>
-
-        <div class="flex justify-between items-start mt-3">
+    <div class="px-5 pt-6 pb-28">
+        <div class="flex justify-between items-start">
             <div>
                 <h1 class="text-4xl font-black">Shop</h1>
             </div>

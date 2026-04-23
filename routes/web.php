@@ -13,9 +13,7 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    Route::post('/daily-reward', [DashboardController::class, 'claimDailyReward'])
-        ->name('daily-reward.claim');
+    Route::post('/daily-reward', [DashboardController::class, 'claimDailyReward'])->name('daily-reward.claim');
 
     Route::get('/quests', [QuestController::class, 'index'])->name('quests.index');
     Route::get('/quests/{quest}', [QuestController::class, 'show'])->name('quests.show');

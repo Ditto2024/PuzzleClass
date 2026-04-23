@@ -20,7 +20,7 @@ class ShopController extends Controller
         $user = auth()->user()->load('profile');
         $profile = $user->profile;
 
-        if (! $profile || $profile->coins < $item->price) {
+        if ($profile->coins < $item->price) {
             return back()->with('error', 'Coins tidak cukup.');
         }
 
@@ -28,6 +28,10 @@ class ShopController extends Controller
 
         if ($item->type === 'hint') {
             $profile->hints += $item->value;
+        }
+
+        if ($item->type === 'time_boost') {
+            $profile->time_bonus_seconds += $item->value;
         }
 
         $profile->save();
