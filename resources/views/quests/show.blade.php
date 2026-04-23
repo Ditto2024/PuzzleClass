@@ -6,6 +6,18 @@
                 <h1 class="text-3xl font-black mt-4">Quest Selesai</h1>
                 <p class="text-gray-500 mt-2">{{ $quest->title }} sudah kamu tuntaskan.</p>
 
+                @if(session('success'))
+                    <div class="mt-4 bg-green-50 text-green-700 rounded-[20px] p-4 shadow-sm font-semibold">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="mt-4 bg-red-50 text-red-600 rounded-[20px] p-4 shadow-sm font-semibold">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
                 <a href="{{ route('quests.index') }}" class="mt-5 inline-flex bg-black text-white rounded-[18px] px-6 py-3 font-bold">
                     Kembali ke Quest
                 </a>
@@ -21,6 +33,18 @@
                     <div class="text-2xl font-black text-white">{{ optional(auth()->user()->profile)->coins ?? 0 }}</div>
                 </div>
             </div>
+
+            @if(session('success'))
+                <div class="mt-4 bg-green-50 text-green-700 rounded-[20px] p-4 shadow-sm font-semibold">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="mt-4 bg-red-50 text-red-600 rounded-[20px] p-4 shadow-sm font-semibold">
+                    {{ session('error') }}
+                </div>
+            @endif
 
             <div class="grid grid-cols-2 gap-4 mt-5">
                 <div class="bg-white rounded-[24px] p-4 shadow-sm">
@@ -65,25 +89,13 @@
                 </form>
 
                 <button form="answer-form" type="submit" class="bg-black text-white rounded-[18px] py-4 font-bold">
-                    Continue
+                    Jawab
                 </button>
             </div>
 
             @if(session('hint_text'))
                 <div class="mt-4 bg-yellow-50 text-yellow-700 rounded-[20px] p-4 shadow-sm">
                     Hint: {{ session('hint_text') }}
-                </div>
-            @endif
-
-            @if(session('success'))
-                <div class="mt-4 bg-green-50 text-green-700 rounded-[20px] p-4 shadow-sm font-semibold">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="mt-4 bg-red-50 text-red-600 rounded-[20px] p-4 shadow-sm font-semibold">
-                    {{ session('error') }}
                 </div>
             @endif
         @endif

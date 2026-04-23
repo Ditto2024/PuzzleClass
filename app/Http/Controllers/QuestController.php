@@ -49,27 +49,30 @@ class QuestController extends Controller
         $user = auth()->user()->load('profile');
         $quest->load('puzzles');
 
-        $solvedPuzzleIds = UserPuzzleAttempt::where('user_id', $user->id)
-            ->where('is_correct', true)
-            ->pluck('puzzle_id')
-            ->toArray();
+        $currentOrder = request('step');
 
         $puzzles = $quest->puzzles->sortBy('order')->values();
 
-        $currentPuzzle = $puzzles->first(fn ($item) => ! in_array($item->id, $solvedPuzzleIds));
+        if ($currentOrder) {
+            $currentPuzzle = $puzzles->firstWhere('order', (int) $currentOrder);
+        } else {
+            $currentPuzzle = $puzzles->first();
+        }
+
         $questCompleted = false;
 
         if (! $currentPuzzle) {
             $questCompleted = true;
-            $currentPuzzle = $puzzles->first();
+            $currentPuzzle = $puzzles->last();
         }
 
-        $lastCorrectAttempt = UserPuzzleAttempt::where('user_id', $user->id)
-            ->where('is_correct', true)
+        $lastAttempt = UserPuzzleAttempt::where('user_id', $user->id)
             ->latest()
             ->first();
 
-        $comboCount = $lastCorrectAttempt?->combo_count ?? 0;
+        $comboCount = $lastAttempt && $lastAttempt->is_correct
+            ? max(1, $lastAttempt->combo_count)
+            : 1;
 
         $timeLeft = $currentPuzzle
             ? ($currentPuzzle->time_limit + ($user->profile->time_bonus_seconds ?? 0))
@@ -82,7 +85,7 @@ class QuestController extends Controller
             'puzzle' => $currentPuzzle,
             'questCompleted' => $questCompleted,
             'timeLeft' => $timeLeft,
-            'comboCount' => max(1, $comboCount),
+            'comboCount' => $comboCount,
             'answerOptions' => $answerOptions,
         ]);
     }
@@ -113,29 +116,21 @@ class QuestController extends Controller
 
         $user = auth()->user()->load('profile');
         $profile = $user->profile;
-        $quest = $puzzle->quest;
+        $quest = $puzzle->quest->load('puzzles');
 
         $submittedAnswer = strtolower(trim($request->answer));
         $correctAnswer = strtolower(trim($puzzle->answer));
         $isCorrect = $submittedAnswer === $correctAnswer;
 
-        $alreadySolved = UserPuzzleAttempt::where('user_id', $user->id)
-            ->where('puzzle_id', $puzzle->id)
-            ->where('is_correct', true)
-            ->exists();
-
-        $lastCorrectAttempt = UserPuzzleAttempt::where('user_id', $user->id)
-            ->where('is_correct', true)
+        $lastAttempt = UserPuzzleAttempt::where('user_id', $user->id)
             ->latest()
             ->first();
 
         $comboCount = $isCorrect
-            ? (($lastCorrectAttempt?->combo_count ?? 0) + 1)
+            ? (($lastAttempt && $lastAttempt->is_correct) ? $lastAttempt->combo_count + 1 : 1)
             : 0;
 
-        $earnedPoints = $isCorrect && ! $alreadySolved
-            ? $puzzle->bonus_points + max(0, ($comboCount - 1) * 10)
-            : 0;
+        $earnedPoints = $isCorrect ? $puzzle->bonus_points + max(0, ($comboCount - 1) * 10) : 0;
 
         UserPuzzleAttempt::create([
             'user_id' => $user->id,
@@ -147,65 +142,79 @@ class QuestController extends Controller
             'combo_count' => $comboCount,
         ]);
 
-        if (! $isCorrect) {
-            $profile->last_puzzle_played_at = now();
-            $profile->save();
+        if ($isCorrect) {
+            $profile->points += $earnedPoints;
+            $profile->xp += 20;
+            $profile->coins += 10;
+            $profile->puzzles_solved += 1;
 
-            return back()->with('error', 'Jawaban masih salah, coba lagi.');
+            while ($profile->xp >= ($profile->level * 200)) {
+                $profile->xp -= ($profile->level * 200);
+                $profile->level += 1;
+            }
         }
 
-        if (! $alreadySolved) {
-            $profile->points += $earnedPoints;
-            $profile->xp += 50;
-            $profile->coins += 20;
-            $profile->puzzles_solved += 1;
-            $profile->last_puzzle_played_at = now();
+        $profile->last_puzzle_played_at = now();
 
-            if ($profile->time_bonus_seconds > 0) {
-                $profile->time_bonus_seconds = 0;
-            }
+        if ($profile->time_bonus_seconds > 0) {
+            $profile->time_bonus_seconds = 0;
+        }
+
+        $profile->save();
+
+        $nextPuzzle = $quest->puzzles
+            ->sortBy('order')
+            ->first(fn ($item) => $item->order > $puzzle->order);
+
+        if ($nextPuzzle) {
+            return redirect()
+                ->route('quests.show', ['quest' => $quest->id, 'step' => $nextPuzzle->order])
+                ->with($isCorrect ? 'success' : 'error', $isCorrect ? 'Jawaban benar! Lanjut ke soal berikutnya.' : 'Jawaban salah. Tetap lanjut ke soal berikutnya.');
+        }
+
+        if ($isCorrect) {
+            $profile->points += $quest->reward_points;
+            $profile->xp += $quest->reward_xp;
 
             while ($profile->xp >= ($profile->level * 200)) {
                 $profile->xp -= ($profile->level * 200);
                 $profile->level += 1;
             }
 
-            $questPuzzleIds = $quest->puzzles()->pluck('id')->toArray();
-
-            $solvedQuestCount = UserPuzzleAttempt::where('user_id', $user->id)
-                ->whereIn('puzzle_id', $questPuzzleIds)
-                ->where('is_correct', true)
-                ->distinct('puzzle_id')
-                ->count('puzzle_id');
-
-            if ($solvedQuestCount === count($questPuzzleIds)) {
-                $profile->points += $quest->reward_points;
-                $profile->xp += $quest->reward_xp;
-            }
-
             $profile->save();
         }
 
         return redirect()
-            ->route('quests.show', $quest)
-            ->with('success', $quest->puzzles()->count() > 1 ? 'Benar! Lanjut ke puzzle berikutnya.' : 'Benar! Quest selesai.');
+            ->route('quests.show', ['quest' => $quest->id, 'step' => 999])
+            ->with($isCorrect ? 'success' : 'error', $isCorrect ? 'Quest selesai!' : 'Quest selesai, tapi ada jawaban yang salah.');
     }
 
     private function buildAnswerOptions(?Puzzle $puzzle): array
     {
-        if (! $puzzle) {
-            return [];
-        }
+        if (! $puzzle) return [];
 
         return match ($puzzle->answer) {
+            'langkah-langkah' => ['langkah-langkah', 'acak', 'gambar'],
+            'terurut' => ['acak', 'terurut', 'random'],
+            'menyelesaikan masalah' => ['main game', 'menyelesaikan masalah', 'menggambar'],
+            'jelas' => ['jelas', 'rumit', 'acak'],
+            'selesai' => ['mulai', 'selesai', 'ulang'],
+
+            'true' => ['true', 'false', 'error'],
+            'false' => ['true', 'false', 'loop'],
+            'if' => ['if', 'loop', 'array'],
+            'else' => ['if', 'else', 'for'],
+            'benar' => ['benar', 'salah', 'loop'],
+
+            'loop' => ['loop', 'if', 'array'],
+            'for' => ['for', 'if', 'else'],
+            'while' => ['while', 'for', 'if'],
+            'sequence' => ['sequence', 'loop', 'branch'],
             '4' => ['3', '4', '5'],
             'xor' => ['and', 'xor', 'or'],
             'alpha-7' => ['alpha-5', 'alpha-7', 'alpha-9'],
-            default => [
-                $puzzle->answer,
-                $puzzle->answer . 'x',
-                strrev($puzzle->answer),
-            ],
+
+            default => [$puzzle->answer, 'opsi1', 'opsi2'],
         };
     }
 }
