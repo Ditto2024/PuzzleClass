@@ -1,14 +1,21 @@
 <x-mobile-shell title="Edit Profile - PuzzleClass">
     <div class="px-5 pt-6 pb-28">
-        <div class="text-[10px] tracking-[0.35em] text-gray-400 uppercase">Edit Profile</div>
-
         <div class="mt-4 text-center">
-            @if(optional($user->profile)->avatar)
+            @if(optional($user->profile)->avatar_url)
                 <img
-                    src="{{ asset('storage/' . $user->profile->avatar) }}"
+                    src="{{ $user->profile->avatar_url }}"
                     alt="Avatar"
-                    class="w-24 h-24 rounded-full object-cover mx-auto shadow-lg"
+                    class="w-24 h-24 rounded-full object-cover mx-auto shadow-lg border-4 border-white"
+                    onerror="this.style.display='none'; document.getElementById('avatar-fallback-edit').style.display='flex';"
                 >
+
+                <div
+                    id="avatar-fallback-edit"
+                    class="w-24 h-24 rounded-full bg-violet-600 mx-auto shadow-lg items-center justify-center text-white text-3xl"
+                    style="display:none;"
+                >
+                    👤
+                </div>
             @else
                 <div class="w-24 h-24 rounded-full bg-violet-600 mx-auto shadow-lg flex items-center justify-center text-white text-3xl">
                     👤

@@ -9,12 +9,21 @@
 
     <div class="px-5 pt-6 pb-28">
         <div class="text-center">
-            @if($profile && $profile->avatar)
+            @if($profile && $profile->avatar_url)
                 <img
-                    src="{{ asset('storage/' . $profile->avatar) }}"
+                    src="{{ $profile->avatar_url }}"
                     alt="Avatar"
-                    class="w-24 h-24 rounded-full object-cover mx-auto shadow-lg"
+                    class="w-24 h-24 rounded-full object-cover mx-auto shadow-lg border-4 border-white"
+                    onerror="this.style.display='none'; document.getElementById('avatar-fallback-page').style.display='flex';"
                 >
+
+                <div
+                    id="avatar-fallback-page"
+                    class="w-24 h-24 rounded-full bg-gradient-to-br from-violet-600 to-violet-400 mx-auto shadow-lg items-center justify-center text-white text-3xl"
+                    style="display:none;"
+                >
+                    👤
+                </div>
             @else
                 <div class="w-24 h-24 rounded-full bg-gradient-to-br from-violet-600 to-violet-400 mx-auto shadow-lg flex items-center justify-center text-white text-3xl">
                     👤
