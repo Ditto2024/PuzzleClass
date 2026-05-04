@@ -28,6 +28,7 @@ class Profile extends Model
         'avatar',
         'reduce_animation',
         'auto_next_enabled',
+        'music_enabled',
     ];
 
     protected $casts = [
@@ -37,6 +38,7 @@ class Profile extends Model
         'last_puzzle_played_at' => 'datetime',
         'reduce_animation' => 'boolean',
         'auto_next_enabled' => 'boolean',
+        'music_enabled' => 'boolean',
     ];
 
     protected $appends = [

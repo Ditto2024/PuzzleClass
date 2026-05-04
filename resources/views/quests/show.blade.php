@@ -111,6 +111,40 @@
     </div>
 
     <x-bottom-nav />
+    
+    @if(optional(auth()->user()->profile)->sound_enabled && session('answer_state'))
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const state = @json(session('answer_state'));
+
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+            function playBeep(frequency, duration, type = 'sine') {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.type = type;
+                oscillator.frequency.value = frequency;
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + duration);
+            }
+
+            if (state === 'correct') {
+                playBeep(880, 0.15, 'sine');
+                setTimeout(() => playBeep(1200, 0.18, 'sine'), 140);
+            } else {
+                playBeep(220, 0.25, 'sawtooth');
+            }
+        });
+    </script>
+@endif
 
     @if(!$questCompleted)
         <script>
