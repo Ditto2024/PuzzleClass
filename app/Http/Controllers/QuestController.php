@@ -10,53 +10,49 @@ use Illuminate\Http\Request;
 class QuestController extends Controller
 {
     public function index()
-    {
-        $user = auth()->user();
-        $quests = Quest::with('puzzles')->where('is_active', true)->orderBy('order')->get();
-        $today = now()->toDateString();
+{
+    $user = auth()->user();
 
-        foreach ($quests as $quest) {
-            $questPuzzleIds = $quest->puzzles->pluck('id')->toArray();
+    $quests = Quest::with('puzzles')
+        ->where('is_active', true)
+        ->orderBy('order')
+        ->get();
 
-            $solvedCount = UserPuzzleAttempt::where('user_id', $user->id)
-                ->whereIn('puzzle_id', $questPuzzleIds)
-                ->where('is_correct', true)
-                ->whereDate('created_at', $today)
-                ->distinct('puzzle_id')
-                ->count('puzzle_id');
+    $today = now()->toDateString();
+    $previousQuestDone = true;
 
-            $questTotal = count($questPuzzleIds);
+    foreach ($quests as $quest) {
+        $questPuzzleIds = $quest->puzzles->pluck('id')->toArray();
+        $questTotal = count($questPuzzleIds);
 
-            $previousQuest = $quests->firstWhere('order', $quest->order - 1);
-            $previousDone = true;
+        $answeredCount = UserPuzzleAttempt::where('user_id', $user->id)
+            ->whereIn('puzzle_id', $questPuzzleIds)
+            ->whereDate('created_at', $today)
+            ->distinct('puzzle_id')
+            ->count('puzzle_id');
 
-            if ($previousQuest) {
-                $prevPuzzleIds = $previousQuest->puzzles->pluck('id')->toArray();
-
-                $prevCorrectCount = UserPuzzleAttempt::where('user_id', $user->id)
-                    ->whereIn('puzzle_id', $prevPuzzleIds)
-                    ->where('is_correct', true)
-                    ->whereDate('created_at', $today)
-                    ->distinct('puzzle_id')
-                    ->count('puzzle_id');
-
-                $previousDone = $prevCorrectCount === count($prevPuzzleIds);
-            }
-
-            if ($questTotal > 0 && $solvedCount === $questTotal) {
-                $quest->ui_status = 'Done';
-                $quest->progress_percent = 100;
-            } elseif ($previousDone) {
-                $quest->ui_status = 'Start';
-                $quest->progress_percent = $questTotal > 0 ? intval(($solvedCount / $questTotal) * 100) : 0;
-            } else {
-                $quest->ui_status = 'Locked';
-                $quest->progress_percent = 0;
-            }
+        if (! $previousQuestDone) {
+            $quest->ui_status = 'Locked';
+            $quest->progress_percent = 0;
+            continue;
         }
 
-        return view('quests.index', compact('quests'));
+        if ($questTotal > 0 && $answeredCount >= $questTotal) {
+            $quest->ui_status = 'Done';
+            $quest->progress_percent = 100;
+            $previousQuestDone = true;
+        } else {
+            $quest->ui_status = 'Start';
+            $quest->progress_percent = $questTotal > 0
+                ? intval(($answeredCount / $questTotal) * 100)
+                : 0;
+
+            $previousQuestDone = false;
+        }
     }
+
+    return view('quests.index', compact('quests'));
+}
 
     public function show(Quest $quest)
     {
