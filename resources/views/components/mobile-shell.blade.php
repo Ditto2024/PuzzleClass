@@ -31,18 +31,35 @@
                         music.currentTime = parseFloat(savedTime);
                     }
 
-                    function playMusic() {
-                        music.play().catch(() => {});
-                    }
-
-                    document.addEventListener('click', playMusic, { once: true });
-
-                    setInterval(() => {
-                        if (!music.paused) {
+                    function saveTime() {
+                        if (!Number.isNaN(music.currentTime)) {
                             localStorage.setItem('puzzleclass_music_time', music.currentTime);
                         }
-                    }, 1000);
+                    }
+
+                    function playMusic() {
+                        music.play().then(() => {
+                            localStorage.setItem('puzzleclass_music_playing', 'true');
+                        }).catch(() => {});
+                    }
+
+                    if (localStorage.getItem('puzzleclass_music_playing') === 'true') {
+                        playMusic();
+                    }
+
+                    document.addEventListener('click', () => {
+                        playMusic();
+                    }, { once: true });
+
+                    setInterval(saveTime, 250);
+
+                    window.addEventListener('beforeunload', saveTime);
+                    document.addEventListener('visibilitychange', saveTime);
                 });
+            </script>
+        @else
+            <script>
+                localStorage.setItem('puzzleclass_music_playing', 'false');
             </script>
         @endif
     @endauth
