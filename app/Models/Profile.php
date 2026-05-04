@@ -20,12 +20,17 @@ class Profile extends Model
         'streak_count',
         'puzzles_solved',
         'time_bonus_seconds',
+        'time_boost_15',
+        'sound_enabled',
+        'dark_mode',
         'last_daily_reward_claimed_at',
         'last_puzzle_played_at',
         'avatar',
     ];
 
     protected $casts = [
+        'sound_enabled' => 'boolean',
+        'dark_mode' => 'boolean',
         'last_daily_reward_claimed_at' => 'datetime',
         'last_puzzle_played_at' => 'datetime',
     ];

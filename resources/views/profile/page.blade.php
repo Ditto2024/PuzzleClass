@@ -65,10 +65,10 @@
                 <span>✏️</span>
             </a>
 
-            <div class="bg-white rounded-[20px] px-5 py-4 shadow-sm flex justify-between items-center">
-                <span class="font-semibold">Pengaturan</span>
-                <span>⚙️</span>
-            </div>
+            <a href="{{ route('settings.index') }}" class="bg-white rounded-[20px] px-5 py-4 shadow-sm flex justify-between items-center">
+    <span class="font-semibold">Pengaturan</span>
+    <span>⚙️</span>
+</a>
 
             <a href="{{ route('leaderboard.index') }}" class="bg-white rounded-[20px] px-5 py-4 shadow-sm flex justify-between items-center">
                 <span class="font-semibold">Leaderboard</span>

@@ -74,11 +74,22 @@
                 </div>
             </form>
 
-            <div class="grid grid-cols-2 gap-3 mt-4">
+            <form id="timeout-form" method="POST" action="{{ route('puzzle.timeout', $puzzle) }}" class="hidden">
+                @csrf
+            </form>
+
+            <div class="grid grid-cols-1 gap-3 mt-4">
                 <form method="POST" action="{{ route('puzzle.hint', $puzzle) }}">
                     @csrf
                     <button type="submit" class="w-full bg-amber-400 rounded-[18px] py-4 font-bold text-gray-900">
                         💡 Hint (20)
+                    </button>
+                </form>
+
+                <form method="POST" action="{{ route('puzzle.use-time', $puzzle) }}">
+                    @csrf
+                    <button type="submit" class="w-full bg-blue-400 rounded-[18px] py-4 font-bold text-white">
+                        ⏱️ +15 Detik ({{ optional(auth()->user()->profile)->time_boost_15 ?? 0 }})
                     </button>
                 </form>
 
@@ -97,34 +108,12 @@
 
     <x-bottom-nav />
 
-    <audio id="sound-correct" preload="auto">
-        <source src="data:audio/wav;base64,UklGRlQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YTAAAAA=" type="audio/wav">
-    </audio>
-
-    <audio id="sound-wrong" preload="auto">
-        <source src="data:audio/wav;base64,UklGRlQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YTAAAAA=" type="audio/wav">
-    </audio>
-
-    @if(session('answer_state'))
-        <script>
-            window.addEventListener('DOMContentLoaded', () => {
-                const state = @json(session('answer_state'));
-                const sound = state === 'correct'
-                    ? document.getElementById('sound-correct')
-                    : document.getElementById('sound-wrong');
-
-                if (sound) {
-                    sound.volume = 0.5;
-                    sound.play().catch(() => {});
-                }
-            });
-        </script>
-    @endif
-
     @if(!$questCompleted)
         <script>
-            let seconds = {{ $timeLeft }};
+            let seconds = {{ $timeLeft }} + {{ session('time_boost_used', 0) }};
             const timerEl = document.getElementById('timer-display');
+            const timeoutForm = document.getElementById('timeout-form');
+            let submitted = false;
 
             function formatTime(totalSeconds) {
                 const mins = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
@@ -132,12 +121,20 @@
                 return `${mins}:${secs}`;
             }
 
+            timerEl.textContent = formatTime(seconds);
+
             const interval = setInterval(() => {
                 seconds--;
 
-                if (seconds < 0) {
+                if (seconds <= 0) {
                     clearInterval(interval);
                     timerEl.textContent = '00:00';
+
+                    if (!submitted) {
+                        submitted = true;
+                        timeoutForm.submit();
+                    }
+
                     return;
                 }
 
