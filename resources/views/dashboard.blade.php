@@ -101,41 +101,5 @@
             </div>
         @endif
 
-        <div class="mt-6">
-            <div class="flex items-center justify-between mb-3">
-                <h2 class="text-2xl font-black">Quest Tersedia</h2>
-                <a href="{{ route('quests.index') }}" class="text-violet-600 font-semibold text-sm">
-                    Lihat semua
-                </a>
-            </div>
-
-            <div class="space-y-4">
-                @forelse($quests as $quest)
-                    <div class="bg-white rounded-[24px] p-5 shadow-sm">
-                        <div class="flex items-center justify-between gap-3">
-                            <div class="min-w-0">
-                                <div class="text-xl font-bold truncate">{{ $quest->title }}</div>
-                                <div class="text-sm text-gray-400 mt-1">{{ $quest->description }}</div>
-                            </div>
-
-                            <a href="{{ route('quests.show', $quest) }}" class="px-4 py-2 rounded-full text-sm font-bold bg-violet-100 text-violet-600 shrink-0">
-                                Start
-                            </a>
-                        </div>
-
-                        <div class="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
-                            <div class="bg-emerald-400 h-full rounded-full"
-                                 style="width: {{ $quest->daily_progress_percent ?? 0 }}%"></div>
-                        </div>
-                    </div>
-                @empty
-                    <div class="bg-white rounded-[24px] p-5 shadow-sm text-gray-400">
-                        Belum ada quest tersedia.
-                    </div>
-                @endforelse
-            </div>
-        </div>
-    </div>
-
     <x-bottom-nav />
 </x-mobile-shell>
