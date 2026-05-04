@@ -18,11 +18,23 @@
                 <h1 class="text-4xl font-black mt-1">{{ $user->name }}</h1>
             </div>
 
-            <div class="bg-white rounded-2xl px-4 py-3 shadow-sm min-w-[82px] text-center">
-                <div class="text-xs text-gray-400">Coins</div>
-                <div class="text-3xl font-black text-green-500">{{ optional($user->profile)->coins ?? 0 }}</div>
-            </div>
+            <div class="bg-white rounded-2xl px-4 py-3 shadow-sm min-w-[112px] text-center">
+    <div class="text-xs text-gray-400">Coins</div>
+
+    <div class="flex items-center justify-center gap-2">
+        <div class="text-3xl font-black text-green-500">
+            {{ optional($user->profile)->coins ?? 0 }}
         </div>
+
+        <button
+            id="music-toggle"
+            type="button"
+            class="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center text-lg shadow-md active:scale-95 transition"
+        >
+            🎵
+        </button>
+    </div>
+</div>
 
         <div class="mt-5 rounded-[26px] bg-gradient-to-r from-violet-600 to-violet-400 text-white p-5 shadow-lg">
             <div class="flex justify-between items-start">

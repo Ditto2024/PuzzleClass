@@ -14,62 +14,74 @@
     </div>
 
     @auth
-        @if(optional(auth()->user()->profile)->music_enabled)
-            <audio id="bg-music" loop preload="auto">
-                <source src="{{ asset('audio/kicaumania.mp3') }}" type="audio/mpeg">
-            </audio>
+        <audio id="bg-music" loop preload="auto">
+            <source src="{{ asset('audio/kicaumania.mp3') }}" type="audio/mpeg">
+        </audio>
 
-            <button
-                id="music-toggle"
-                type="button"
-                class="fixed top-4 right-4 z-[9999] bg-black text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center text-xl"
-            >
-                🎵
-            </button>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const music = document.getElementById('bg-music');
+                const musicButton = document.getElementById('music-toggle');
 
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    const music = document.getElementById('bg-music');
-                    const button = document.getElementById('music-toggle');
+                if (!music) return;
 
-                    if (!music || !button) return;
+                music.volume = 0.25;
 
-                    music.volume = 0.25;
+                const savedTime = localStorage.getItem('puzzleclass_music_time');
+                if (savedTime) {
+                    music.currentTime = parseFloat(savedTime);
+                }
 
-                    let isPlaying = false;
+                function updateButton() {
+                    if (!musicButton) return;
+                    musicButton.textContent = localStorage.getItem('puzzleclass_music_enabled') === 'true' ? '🔊' : '🎵';
+                }
 
-                    function playMusic() {
-                        music.play().then(() => {
-                            isPlaying = true;
-                            button.textContent = '🔊';
-                        }).catch(() => {
-                            isPlaying = false;
-                            button.textContent = '🎵';
-                        });
-                    }
+                function playMusic() {
+                    localStorage.setItem('puzzleclass_music_enabled', 'true');
 
-                    function pauseMusic() {
-                        music.pause();
-                        isPlaying = false;
-                        button.textContent = '🔇';
-                    }
+                    music.play().then(() => {
+                        updateButton();
+                    }).catch(() => {
+                        updateButton();
+                    });
+                }
 
-                    button.addEventListener('click', () => {
-                        if (isPlaying) {
+                function pauseMusic() {
+                    music.pause();
+                    localStorage.setItem('puzzleclass_music_enabled', 'false');
+                    updateButton();
+                }
+
+                if (musicButton) {
+                    musicButton.addEventListener('click', () => {
+                        if (localStorage.getItem('puzzleclass_music_enabled') === 'true' && !music.paused) {
                             pauseMusic();
                         } else {
                             playMusic();
                         }
                     });
+                }
 
-                    document.addEventListener('click', () => {
-                        if (!isPlaying) {
-                            playMusic();
-                        }
-                    }, { once: true });
-                });
-            </script>
-        @endif
+                document.addEventListener('click', () => {
+                    if (localStorage.getItem('puzzleclass_music_enabled') === 'true') {
+                        playMusic();
+                    }
+                }, { once: true });
+
+                if (localStorage.getItem('puzzleclass_music_enabled') === 'true') {
+                    playMusic();
+                }
+
+                setInterval(() => {
+                    if (!music.paused) {
+                        localStorage.setItem('puzzleclass_music_time', music.currentTime);
+                    }
+                }, 1000);
+
+                updateButton();
+            });
+        </script>
     @endauth
 </body>
 </html>
