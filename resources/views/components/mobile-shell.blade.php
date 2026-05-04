@@ -14,74 +14,37 @@
     </div>
 
     @auth
-        <audio id="bg-music" loop preload="auto">
-            <source src="{{ asset('audio/kicaumania.mp3') }}" type="audio/mpeg">
-        </audio>
+        @if(optional(auth()->user()->profile)->music_enabled)
+            <audio id="bg-music" loop preload="auto">
+                <source src="{{ asset('audio/kicaumania.mp3') }}" type="audio/mpeg">
+            </audio>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const music = document.getElementById('bg-music');
-                const musicButton = document.getElementById('music-toggle');
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const music = document.getElementById('bg-music');
+                    if (!music) return;
 
-                if (!music) return;
+                    music.volume = 0.25;
 
-                music.volume = 0.25;
+                    const savedTime = localStorage.getItem('puzzleclass_music_time');
+                    if (savedTime) {
+                        music.currentTime = parseFloat(savedTime);
+                    }
 
-                const savedTime = localStorage.getItem('puzzleclass_music_time');
-                if (savedTime) {
-                    music.currentTime = parseFloat(savedTime);
-                }
+                    function playMusic() {
+                        music.play().catch(() => {});
+                    }
 
-                function updateButton() {
-                    if (!musicButton) return;
-                    musicButton.textContent = localStorage.getItem('puzzleclass_music_enabled') === 'true' ? '🔊' : '🎵';
-                }
+                    document.addEventListener('click', playMusic, { once: true });
 
-                function playMusic() {
-                    localStorage.setItem('puzzleclass_music_enabled', 'true');
-
-                    music.play().then(() => {
-                        updateButton();
-                    }).catch(() => {
-                        updateButton();
-                    });
-                }
-
-                function pauseMusic() {
-                    music.pause();
-                    localStorage.setItem('puzzleclass_music_enabled', 'false');
-                    updateButton();
-                }
-
-                if (musicButton) {
-                    musicButton.addEventListener('click', () => {
-                        if (localStorage.getItem('puzzleclass_music_enabled') === 'true' && !music.paused) {
-                            pauseMusic();
-                        } else {
-                            playMusic();
+                    setInterval(() => {
+                        if (!music.paused) {
+                            localStorage.setItem('puzzleclass_music_time', music.currentTime);
                         }
-                    });
-                }
-
-                document.addEventListener('click', () => {
-                    if (localStorage.getItem('puzzleclass_music_enabled') === 'true') {
-                        playMusic();
-                    }
-                }, { once: true });
-
-                if (localStorage.getItem('puzzleclass_music_enabled') === 'true') {
-                    playMusic();
-                }
-
-                setInterval(() => {
-                    if (!music.paused) {
-                        localStorage.setItem('puzzleclass_music_time', music.currentTime);
-                    }
-                }, 1000);
-
-                updateButton();
-            });
-        </script>
+                    }, 1000);
+                });
+            </script>
+        @endif
     @endauth
 </body>
 </html>

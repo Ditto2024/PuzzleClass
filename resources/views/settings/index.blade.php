@@ -28,10 +28,14 @@
             </div>
 
             <div class="bg-white rounded-[22px] p-5 shadow-sm flex items-center justify-between">
-                <div>
-                    <div class="font-bold text-lg">Background Music</div>
-                    <div class="text-sm text-gray-400">Musik latar saat bermain</div>
-                </div>
+    <div>
+        <div class="font-bold text-lg">Background Music</div>
+        <div class="text-sm text-gray-400">Musik latar saat bermain</div>
+    </div>
+
+    <input type="checkbox" name="music_enabled" value="1"
+        {{ ($profile->music_enabled ?? false) ? 'checked' : '' }}>
+</div>
 
                 <input type="checkbox" name="music_enabled" value="1"
                     {{ ($profile->music_enabled ?? false) ? 'checked' : '' }}>
