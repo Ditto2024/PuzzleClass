@@ -16,35 +16,65 @@
             <div class="bg-white rounded-[22px] p-5 shadow-sm flex items-center justify-between">
                 <div>
                     <div class="font-bold text-lg">Sound Effect</div>
-                    <div class="text-sm text-gray-400">Aktifkan suara benar/salah</div>
+                    <div class="text-sm text-gray-400">Suara benar, salah, dan reward</div>
                 </div>
 
-                <input
-                    type="checkbox"
-                    name="sound_enabled"
-                    value="1"
-                    {{ optional($user->profile)->sound_enabled ? 'checked' : '' }}
-                >
+                <input type="checkbox" name="sound_enabled" value="1"
+                    {{ optional($user->profile)->sound_enabled ? 'checked' : '' }}>
             </div>
 
             <div class="bg-white rounded-[22px] p-5 shadow-sm flex items-center justify-between">
                 <div>
                     <div class="font-bold text-lg">Dark Mode</div>
-                    <div class="text-sm text-gray-400">Preferensi tampilan gelap</div>
+                    <div class="text-sm text-gray-400">Mode gelap untuk tampilan</div>
                 </div>
 
-                <input
-                    type="checkbox"
-                    name="dark_mode"
-                    value="1"
-                    {{ optional($user->profile)->dark_mode ? 'checked' : '' }}
-                >
+                <input type="checkbox" name="dark_mode" value="1"
+                    {{ optional($user->profile)->dark_mode ? 'checked' : '' }}>
+            </div>
+
+            <div class="bg-white rounded-[22px] p-5 shadow-sm flex items-center justify-between">
+                <div>
+                    <div class="font-bold text-lg">Reduce Animation</div>
+                    <div class="text-sm text-gray-400">Kurangi animasi agar lebih ringan</div>
+                </div>
+
+                <input type="checkbox" name="reduce_animation" value="1"
+                    {{ optional($user->profile)->reduce_animation ? 'checked' : '' }}>
+            </div>
+
+            <div class="bg-white rounded-[22px] p-5 shadow-sm flex items-center justify-between">
+                <div>
+                    <div class="font-bold text-lg">Auto Next</div>
+                    <div class="text-sm text-gray-400">Lanjut otomatis setelah menjawab</div>
+                </div>
+
+                <input type="checkbox" name="auto_next_enabled" value="1"
+                    {{ optional($user->profile)->auto_next_enabled ?? true ? 'checked' : '' }}>
             </div>
 
             <button class="w-full bg-black text-white rounded-[18px] py-4 font-bold">
                 Simpan Settings
             </button>
         </form>
+
+        <div class="mt-6 bg-white rounded-[24px] p-5 shadow-sm">
+            <h2 class="text-xl font-black">Info Item</h2>
+
+            <div class="mt-4 grid grid-cols-2 gap-3">
+                <div class="bg-yellow-50 rounded-2xl p-4 text-center">
+                    <div class="text-3xl">💡</div>
+                    <div class="font-black mt-1">{{ optional($user->profile)->hints ?? 0 }}</div>
+                    <div class="text-sm text-gray-400">Hint tersedia</div>
+                </div>
+
+                <div class="bg-blue-50 rounded-2xl p-4 text-center">
+                    <div class="text-3xl">⏱️</div>
+                    <div class="font-black mt-1">{{ optional($user->profile)->time_boost_15 ?? 0 }}</div>
+                    <div class="text-sm text-gray-400">+15 detik</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <x-bottom-nav />

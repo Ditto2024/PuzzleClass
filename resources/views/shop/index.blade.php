@@ -5,8 +5,9 @@
                 <h1 class="text-4xl font-black">Shop</h1>
             </div>
 
-            <div class="bg-emerald-400 rounded-full px-4 py-2 shadow-sm">
-                <span class="font-black text-white">🪙 {{ optional($user->profile)->coins ?? 0 }}</span>
+            <div class="bg-emerald-400 rounded-full px-4 py-3 shadow-sm flex items-center gap-2">
+                <span class="text-xl">🪙</span>
+                <span class="font-black text-white text-xl">{{ optional($user->profile)->coins ?? 0 }}</span>
             </div>
         </div>
 
@@ -28,7 +29,7 @@
                     @csrf
 
                     <div class="flex items-center gap-4">
-                        <div class="text-3xl">
+                        <div class="text-4xl">
                             @if($item->type === 'time_boost')
                                 ⏱️
                             @elseif($item->type === 'hint')
@@ -50,8 +51,9 @@
                         </div>
                     </div>
 
-                    <button class="bg-emerald-400 text-white rounded-full px-4 py-2 font-bold">
-                        {{ $item->price }}
+                    <button class="bg-emerald-400 text-white rounded-full px-5 py-3 font-black flex items-center gap-1">
+                        <span>🪙</span>
+                        <span>{{ $item->price }}</span>
                     </button>
                 </form>
             @endforeach

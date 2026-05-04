@@ -26,6 +26,8 @@ class Profile extends Model
         'last_daily_reward_claimed_at',
         'last_puzzle_played_at',
         'avatar',
+        'reduce_animation',
+        'auto_next_enabled',
     ];
 
     protected $casts = [
@@ -33,6 +35,8 @@ class Profile extends Model
         'dark_mode' => 'boolean',
         'last_daily_reward_claimed_at' => 'datetime',
         'last_puzzle_played_at' => 'datetime',
+        'reduce_animation' => 'boolean',
+        'auto_next_enabled' => 'boolean',
     ];
 
     protected $appends = [
