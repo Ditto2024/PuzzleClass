@@ -12,40 +12,43 @@
             </div>
         @endif
 
-        <div class="flex items-start justify-between gap-3">
-            <div class="min-w-0">
-                <p class="text-lg text-gray-500 leading-snug">
+        <div class="flex items-start justify-between gap-4">
+            <div class="flex-1 min-w-0">
+                <p class="text-base text-gray-500 leading-snug">
                     Selamat datang kembali 👋
                 </p>
-                <h1 class="text-4xl font-black mt-2 truncate">{{ $user->name }}</h1>
+                <h1 class="text-4xl font-black mt-2 truncate">
+                    {{ $user->name }}
+                </h1>
             </div>
 
-            <<div class="bg-white rounded-[22px] px-5 py-4 shadow-sm min-w-[105px] text-center shrink-0">
-    <div class="text-sm text-gray-400">Coins</div>
-    <div class="flex items-center justify-center gap-2 mt-1">
-        <span class="inline-flex w-7 h-7 rounded-full bg-yellow-400 border-4 border-yellow-500 items-center justify-center text-xs font-black text-yellow-900">
-            C
-        </span>
-        <span class="text-4xl font-black text-green-500 leading-none">
-            {{ optional($user->profile)->coins ?? 0 }}
-        </span>
-    </div>
-</div>
+            <div class="bg-white rounded-[22px] px-4 py-3 shadow-sm w-[120px] text-center shrink-0">
+                <div class="text-sm text-gray-400">Coins</div>
+                <div class="flex items-center justify-center gap-2 mt-1">
+                    <span class="inline-flex w-7 h-7 rounded-full bg-yellow-400 border-4 border-yellow-500 items-center justify-center text-xs font-black text-yellow-900">
+                        C
+                    </span>
+                    <span class="text-3xl font-black text-green-500 leading-none">
+                        {{ optional($user->profile)->coins ?? 0 }}
+                    </span>
+                </div>
+            </div>
+        </div>
 
         <div class="mt-6 rounded-[30px] bg-gradient-to-br from-violet-600 via-violet-500 to-purple-400 text-white p-6 shadow-xl relative overflow-hidden">
             <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-white/10"></div>
             <div class="absolute -right-10 bottom-0 w-40 h-40 rounded-full bg-black/10"></div>
 
             <div class="relative z-10">
-                <div class="flex justify-between items-start">
-                    <div>
+                <div class="flex justify-between items-start gap-3">
+                    <div class="min-w-0">
                         <p class="text-base opacity-90">Level {{ $level }} Explorer</p>
-                        <p class="text-5xl font-black mt-4 leading-tight">
+                        <p class="text-4xl font-black mt-4 leading-tight">
                             XP {{ $currentXp }} / {{ $xpTarget }}
                         </p>
                     </div>
 
-                    <div class="text-5xl">🔥</div>
+                    <div class="text-5xl shrink-0">🔥</div>
                 </div>
 
                 <div class="mt-5 bg-white/30 h-3 rounded-full overflow-hidden">
@@ -61,9 +64,9 @@
 
         <div class="mt-6 bg-black rounded-[28px] p-5 text-white shadow-lg">
             <div class="flex items-center justify-between gap-4">
-                <div>
+                <div class="min-w-0">
                     <div class="text-sm text-white/60">Continue Learning</div>
-                    <div class="text-2xl font-black mt-1">
+                    <div class="text-2xl font-black mt-1 leading-tight">
                         {{ $quests->first()->title ?? 'Mulai Quest' }}
                     </div>
                     <div class="text-sm text-white/60 mt-1">
@@ -120,7 +123,7 @@
                         </p>
                     </div>
 
-                    <div class="text-4xl">🎯</div>
+                    <div class="text-4xl shrink-0">🎯</div>
                 </div>
 
                 <div class="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
@@ -134,7 +137,6 @@
                 </div>
             </div>
         @endif
-
 
         <div class="mt-6 bg-[#fff7dd] rounded-[24px] p-5 shadow-sm">
             <div class="flex items-start gap-3">
