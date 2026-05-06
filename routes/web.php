@@ -23,7 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/puzzle/{puzzle}/answer', [QuestController::class, 'answer'])->name('puzzle.answer');
     Route::post('/puzzle/{puzzle}/timeout', [QuestController::class, 'timeout'])->name('puzzle.timeout');
     Route::post('/puzzle/{puzzle}/hint', [QuestController::class, 'useHint'])->name('puzzle.hint');
-    Route::post('/puzzle/{puzzle}/use-time', [QuestController::class, 'useTimeBoost'])->name('puzzle.use-time');
+    Route::post('/puzzle/{puzzle}/use-time/{seconds}', [QuestController::class, 'useTimeBoost'])->name('puzzle.use-time');
 
     Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
     Route::post('/shop/{item}/buy', [ShopController::class, 'buy'])->name('shop.buy');

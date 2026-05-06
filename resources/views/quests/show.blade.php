@@ -18,12 +18,12 @@
                 </div>
 
                 <div class="relative">
-                    <button id="power-menu-button" type="button" class="bg-emerald-400 rounded-[24px] px-4 py-3 text-center shadow-sm">
+                    <button id="power-menu-button" type="button" class="bg-emerald-400 rounded-[24px] px-5 py-4 text-center shadow-sm">
                         <div class="text-sm text-white/80">Power</div>
-                        <div class="text-2xl">⚡</div>
+                        <div class="text-4xl">⚡</div>
                     </button>
 
-                    <div id="power-menu" class="hidden absolute right-0 mt-3 w-48 bg-white rounded-[22px] shadow-xl p-3 z-50 space-y-2">
+                    <div id="power-menu" class="hidden absolute right-0 mt-3 w-52 bg-white rounded-[22px] shadow-xl p-3 z-50 space-y-2">
                         <form method="POST" action="{{ route('puzzle.hint', $puzzle) }}">
                             @csrf
                             <button type="submit" class="w-full flex items-center justify-between bg-yellow-50 rounded-2xl px-4 py-3 font-bold">
@@ -32,11 +32,19 @@
                             </button>
                         </form>
 
-                        <form method="POST" action="{{ route('puzzle.use-time', $puzzle) }}">
+                        <form method="POST" action="{{ route('puzzle.use-time', [$puzzle, 15]) }}">
                             @csrf
                             <button type="submit" class="w-full flex items-center justify-between bg-blue-50 rounded-2xl px-4 py-3 font-bold">
                                 <span>⏱️ +15s</span>
                                 <span class="text-sm text-gray-500">{{ optional(auth()->user()->profile)->time_boost_15 ?? 0 }}</span>
+                            </button>
+                        </form>
+
+                        <form method="POST" action="{{ route('puzzle.use-time', [$puzzle, 30]) }}">
+                            @csrf
+                            <button type="submit" class="w-full flex items-center justify-between bg-purple-50 rounded-2xl px-4 py-3 font-bold">
+                                <span>⏱️ +30s</span>
+                                <span class="text-sm text-gray-500">{{ optional(auth()->user()->profile)->time_boost_30 ?? 0 }}</span>
                             </button>
                         </form>
                     </div>
@@ -111,40 +119,6 @@
     </div>
 
     <x-bottom-nav />
-    
-    @if(optional(auth()->user()->profile)->sound_enabled && session('answer_state'))
-    <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            const state = @json(session('answer_state'));
-
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-            function playBeep(frequency, duration, type = 'sine') {
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-
-                oscillator.type = type;
-                oscillator.frequency.value = frequency;
-
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-
-                gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
-
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + duration);
-            }
-
-            if (state === 'correct') {
-                playBeep(880, 0.15, 'sine');
-                setTimeout(() => playBeep(1200, 0.18, 'sine'), 140);
-            } else {
-                playBeep(220, 0.25, 'sawtooth');
-            }
-        });
-    </script>
-@endif
 
     @if(!$questCompleted)
         <script>

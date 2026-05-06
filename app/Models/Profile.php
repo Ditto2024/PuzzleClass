@@ -21,24 +21,21 @@ class Profile extends Model
         'puzzles_solved',
         'time_bonus_seconds',
         'time_boost_15',
+        'time_boost_30',
         'sound_enabled',
         'dark_mode',
+        'auto_next_enabled',
         'last_daily_reward_claimed_at',
         'last_puzzle_played_at',
         'avatar',
-        'reduce_animation',
-        'auto_next_enabled',
-        'music_enabled',
     ];
 
     protected $casts = [
         'sound_enabled' => 'boolean',
         'dark_mode' => 'boolean',
+        'auto_next_enabled' => 'boolean',
         'last_daily_reward_claimed_at' => 'datetime',
         'last_puzzle_played_at' => 'datetime',
-        'reduce_animation' => 'boolean',
-        'auto_next_enabled' => 'boolean',
-        'music_enabled' => 'boolean',
     ];
 
     protected $appends = [

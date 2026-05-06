@@ -31,7 +31,13 @@ class ShopController extends Controller
         }
 
         if ($item->type === 'time_boost') {
-            $profile->time_boost_15 += $item->value;
+            if ((int) $item->value === 15) {
+                $profile->time_boost_15 += 1;
+            }
+
+            if ((int) $item->value === 30) {
+                $profile->time_boost_30 += 1;
+            }
         }
 
         $profile->save();

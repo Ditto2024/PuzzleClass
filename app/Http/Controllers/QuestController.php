@@ -10,49 +10,49 @@ use Illuminate\Http\Request;
 class QuestController extends Controller
 {
     public function index()
-{
-    $user = auth()->user();
+    {
+        $user = auth()->user();
 
-    $quests = Quest::with('puzzles')
-        ->where('is_active', true)
-        ->orderBy('order')
-        ->get();
+        $quests = Quest::with('puzzles')
+            ->where('is_active', true)
+            ->orderBy('order')
+            ->get();
 
-    $today = now()->toDateString();
-    $previousQuestDone = true;
+        $today = now()->toDateString();
+        $previousQuestDone = true;
 
-    foreach ($quests as $quest) {
-        $questPuzzleIds = $quest->puzzles->pluck('id')->toArray();
-        $questTotal = count($questPuzzleIds);
+        foreach ($quests as $quest) {
+            $questPuzzleIds = $quest->puzzles->pluck('id')->toArray();
+            $questTotal = count($questPuzzleIds);
 
-        $answeredCount = UserPuzzleAttempt::where('user_id', $user->id)
-            ->whereIn('puzzle_id', $questPuzzleIds)
-            ->whereDate('created_at', $today)
-            ->distinct('puzzle_id')
-            ->count('puzzle_id');
+            $answeredCount = UserPuzzleAttempt::where('user_id', $user->id)
+                ->whereIn('puzzle_id', $questPuzzleIds)
+                ->whereDate('created_at', $today)
+                ->distinct('puzzle_id')
+                ->count('puzzle_id');
 
-        if (! $previousQuestDone) {
-            $quest->ui_status = 'Locked';
-            $quest->progress_percent = 0;
-            continue;
+            if (! $previousQuestDone) {
+                $quest->ui_status = 'Locked';
+                $quest->progress_percent = 0;
+                continue;
+            }
+
+            if ($questTotal > 0 && $answeredCount >= $questTotal) {
+                $quest->ui_status = 'Done';
+                $quest->progress_percent = 100;
+                $previousQuestDone = true;
+            } else {
+                $quest->ui_status = 'Start';
+                $quest->progress_percent = $questTotal > 0
+                    ? intval(($answeredCount / $questTotal) * 100)
+                    : 0;
+
+                $previousQuestDone = false;
+            }
         }
 
-        if ($questTotal > 0 && $answeredCount >= $questTotal) {
-            $quest->ui_status = 'Done';
-            $quest->progress_percent = 100;
-            $previousQuestDone = true;
-        } else {
-            $quest->ui_status = 'Start';
-            $quest->progress_percent = $questTotal > 0
-                ? intval(($answeredCount / $questTotal) * 100)
-                : 0;
-
-            $previousQuestDone = false;
-        }
+        return view('quests.index', compact('quests'));
     }
-
-    return view('quests.index', compact('quests'));
-}
 
     public function show(Quest $quest)
     {
@@ -88,9 +88,7 @@ class QuestController extends Controller
             ? max(1, $lastAttempt->combo_count)
             : 1;
 
-        $timeLeft = $currentPuzzle
-            ? $currentPuzzle->time_limit
-            : 0;
+        $timeLeft = 10;
 
         $answerOptions = $this->buildAnswerOptions($currentPuzzle);
 
@@ -132,19 +130,34 @@ class QuestController extends Controller
         return back()->with('hint_text', $puzzle->hint ?? 'Hint belum tersedia.');
     }
 
-    public function useTimeBoost(Puzzle $puzzle)
+    public function useTimeBoost(Puzzle $puzzle, int $seconds)
     {
         $user = auth()->user()->load('profile');
         $profile = $user->profile;
 
-        if (($profile->time_boost_15 ?? 0) <= 0) {
-            return back()->with('error', 'Item +15 detik belum tersedia. Beli dulu di shop.');
+        if ($seconds === 15) {
+            if (($profile->time_boost_15 ?? 0) <= 0) {
+                return back()->with('error', 'Item +15 detik belum tersedia. Beli dulu di shop.');
+            }
+
+            $profile->time_boost_15 -= 1;
+            $profile->save();
+
+            return back()->with('time_boost_used', 15);
         }
 
-        $profile->time_boost_15 -= 1;
-        $profile->save();
+        if ($seconds === 30) {
+            if (($profile->time_boost_30 ?? 0) <= 0) {
+                return back()->with('error', 'Item +30 detik belum tersedia. Beli dulu di shop.');
+            }
 
-        return back()->with('time_boost_used', 15);
+            $profile->time_boost_30 -= 1;
+            $profile->save();
+
+            return back()->with('time_boost_used', 30);
+        }
+
+        return back()->with('error', 'Item waktu tidak valid.');
     }
 
     public function answer(Request $request, Puzzle $puzzle)
@@ -245,26 +258,20 @@ class QuestController extends Controller
             ->distinct('puzzle_id')
             ->count('puzzle_id');
 
-        $rewardAlreadyGiven = session('quest_reward_given_' . $quest->id . '_' . $today, false);
-
         $pointsReward = $quest->reward_points + ($totalCorrect * 10);
         $xpReward = $quest->reward_xp + ($totalCorrect * 5);
         $coinsReward = 50 + ($totalCorrect * 5);
 
-        if (! $rewardAlreadyGiven) {
-            $profile->points += $pointsReward;
-            $profile->xp += $xpReward;
-            $profile->coins += $coinsReward;
+        $profile->points += $pointsReward;
+        $profile->xp += $xpReward;
+        $profile->coins += $coinsReward;
 
-            while ($profile->xp >= ($profile->level * 200)) {
-                $profile->xp -= ($profile->level * 200);
-                $profile->level += 1;
-            }
-
-            $profile->save();
-
-            session(['quest_reward_given_' . $quest->id . '_' . $today => true]);
+        while ($profile->xp >= ($profile->level * 200)) {
+            $profile->xp -= ($profile->level * 200);
+            $profile->level += 1;
         }
+
+        $profile->save();
 
         return redirect()->route('quests.complete', $quest->id)
             ->with([

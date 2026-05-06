@@ -20,16 +20,17 @@
                 <h1 class="text-4xl font-black mt-2 truncate">{{ $user->name }}</h1>
             </div>
 
-            <div class="bg-white rounded-[22px] px-5 py-4 shadow-sm min-w-[105px] text-center shrink-0">
-                <div class="text-sm text-gray-400">Coins</div>
-                <div class="flex items-center justify-center gap-1 mt-1">
-                    <span class="text-xl">coin</span>
-                    <span class="text-4xl font-black text-green-500 leading-none">
-                        {{ optional($user->profile)->coins ?? 0 }}
-                    </span>
-                </div>
-            </div>
-        </div>
+            <<div class="bg-white rounded-[22px] px-5 py-4 shadow-sm min-w-[105px] text-center shrink-0">
+    <div class="text-sm text-gray-400">Coins</div>
+    <div class="flex items-center justify-center gap-2 mt-1">
+        <span class="inline-flex w-7 h-7 rounded-full bg-yellow-400 border-4 border-yellow-500 items-center justify-center text-xs font-black text-yellow-900">
+            C
+        </span>
+        <span class="text-4xl font-black text-green-500 leading-none">
+            {{ optional($user->profile)->coins ?? 0 }}
+        </span>
+    </div>
+</div>
 
         <div class="mt-6 rounded-[30px] bg-gradient-to-br from-violet-600 via-violet-500 to-purple-400 text-white p-6 shadow-xl relative overflow-hidden">
             <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-white/10"></div>

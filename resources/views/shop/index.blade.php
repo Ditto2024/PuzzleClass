@@ -6,7 +6,9 @@
             </div>
 
             <div class="bg-emerald-400 rounded-full px-4 py-3 shadow-sm flex items-center gap-2">
-                <span class="text-xl">🪙</span>
+                <span class="inline-flex w-7 h-7 rounded-full bg-yellow-400 border-4 border-yellow-500 items-center justify-center text-xs font-black text-yellow-900">
+                    C
+                </span>
                 <span class="font-black text-white text-xl">{{ optional($user->profile)->coins ?? 0 }}</span>
             </div>
         </div>
@@ -51,8 +53,10 @@
                         </div>
                     </div>
 
-                    <button class="bg-emerald-400 text-white rounded-full px-5 py-3 font-black flex items-center gap-1">
-                        <span>🪙</span>
+                    <button class="bg-emerald-400 text-white rounded-full px-5 py-3 font-black flex items-center gap-2">
+                        <span class="inline-flex w-5 h-5 rounded-full bg-yellow-400 border-2 border-yellow-500 items-center justify-center text-[10px] font-black text-yellow-900">
+                            C
+                        </span>
                         <span>{{ $item->price }}</span>
                     </button>
                 </form>
