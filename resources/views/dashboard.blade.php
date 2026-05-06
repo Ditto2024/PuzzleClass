@@ -62,20 +62,43 @@
             </div>
         </div>
 
-        <div class="mt-6 bg-black rounded-[28px] p-5 text-white shadow-lg">
-            <div class="flex items-center justify-between gap-4">
+        <div class="mt-6 bg-white rounded-[28px] p-5 shadow-sm">
+            <div class="flex items-start justify-between gap-3">
                 <div class="min-w-0">
-                    <div class="text-sm text-white/60">Continue Learning</div>
-                    <div class="text-2xl font-black mt-1 leading-tight">
-                        {{ $quests->first()->title ?? 'Mulai Quest' }}
-                    </div>
-                    <div class="text-sm text-white/60 mt-1">
-                        Latih algoritma hari ini
-                    </div>
+                    <div class="text-sm text-gray-400">Materi Hari Ini</div>
+
+                    <h2 class="text-2xl font-black mt-2">
+                        📘 Algoritma Dasar
+                    </h2>
+
+                    <p class="text-gray-500 text-sm mt-2 leading-relaxed">
+                        Algoritma adalah langkah-langkah terurut untuk menyelesaikan masalah.
+                    </p>
                 </div>
 
-                <a href="{{ route('quests.index') }}" class="bg-violet-600 text-white rounded-full px-5 py-3 font-bold shrink-0">
-                    Mulai
+                <div class="text-5xl shrink-0">🧠</div>
+            </div>
+
+            <div class="mt-5">
+                <div class="flex justify-between text-sm mb-2">
+                    <span class="text-gray-400">Progress Belajar</span>
+                    <span class="font-bold text-violet-600">75%</span>
+                </div>
+
+                <div class="bg-gray-200 rounded-full h-3 overflow-hidden">
+                    <div class="bg-violet-500 h-full rounded-full w-[75%]"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mt-5">
+                <button onclick="openMaterial()"
+                    class="bg-gray-100 rounded-[18px] py-4 font-bold">
+                    📖 Baca Materi
+                </button>
+
+                <a href="{{ route('quests.index') }}"
+                   class="bg-violet-600 text-white rounded-[18px] py-4 text-center font-bold">
+                    🚀 Start Quest
                 </a>
             </div>
         </div>
@@ -144,12 +167,71 @@
                 <div>
                     <div class="font-black text-lg">Tips Hari Ini</div>
                     <p class="text-sm text-gray-500 mt-1">
-                        Algoritma adalah langkah-langkah terurut untuk menyelesaikan masalah.
+                        Algoritma membantu kita menyelesaikan masalah secara runtut, jelas, dan terarah.
                     </p>
                 </div>
             </div>
         </div>
     </div>
 
+    <div id="material-modal"
+         class="hidden fixed inset-0 bg-black/40 z-50 flex items-end justify-center">
+
+        <div class="bg-white w-full max-w-[380px] rounded-t-[30px] p-6">
+            <div class="flex justify-between items-center">
+                <h2 class="text-2xl font-black">
+                    📘 Algoritma Dasar
+                </h2>
+
+                <button onclick="closeMaterial()" class="text-2xl">
+                    ✖
+                </button>
+            </div>
+
+            <div class="mt-5 space-y-4 text-gray-600 leading-relaxed">
+                <p>
+                    Algoritma adalah langkah-langkah terurut untuk menyelesaikan suatu masalah.
+                </p>
+
+                <p>
+                    Contoh algoritma membuat mie:
+                </p>
+
+                <ol class="list-decimal pl-5 space-y-2">
+                    <li>Panaskan air</li>
+                    <li>Masukkan mie</li>
+                    <li>Tunggu 3 menit</li>
+                    <li>Masukkan bumbu</li>
+                    <li>Sajikan</li>
+                </ol>
+
+                <div class="bg-violet-50 rounded-2xl p-4 mt-4">
+                    <div class="font-bold text-violet-700">
+                        💡 Kesimpulan
+                    </div>
+
+                    <p class="text-sm mt-2 text-violet-600">
+                        Algoritma membuat penyelesaian masalah menjadi lebih mudah dipahami.
+                    </p>
+                </div>
+            </div>
+
+            <button onclick="closeMaterial()"
+                class="w-full mt-6 bg-violet-600 text-white rounded-[18px] py-4 font-bold">
+                Saya Mengerti
+            </button>
+        </div>
+    </div>
+
     <x-bottom-nav />
+
+    <script>
+        function openMaterial() {
+            document.getElementById('material-modal').classList.remove('hidden');
+        }
+
+        function closeMaterial() {
+            document.getElementById('material-modal').classList.add('hidden');
+        }
+    </script>
 </x-mobile-shell>

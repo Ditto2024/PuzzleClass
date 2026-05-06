@@ -122,6 +122,8 @@
 
     @if(!$questCompleted)
         <script>
+            const timerKey = 'current_timer_{{ $puzzle->id }}';
+
             const powerButton = document.getElementById('power-menu-button');
             const powerMenu = document.getElementById('power-menu');
 
@@ -129,9 +131,16 @@
                 powerMenu.classList.toggle('hidden');
             });
 
-            let seconds = {{ $timeLeft }} + {{ session('time_boost_used', 0) }};
+            let seconds = localStorage.getItem(timerKey)
+                ? parseInt(localStorage.getItem(timerKey))
+                : {{ $timeLeft }};
+
+            seconds += {{ session('time_boost_used', 0) }};
+
             const timerEl = document.getElementById('timer-display');
             const timeoutForm = document.getElementById('timeout-form');
+            const answerForm = document.getElementById('answer-form');
+
             let submitted = false;
 
             function formatTime(totalSeconds) {
@@ -141,9 +150,11 @@
             }
 
             timerEl.textContent = formatTime(seconds);
+            localStorage.setItem(timerKey, seconds);
 
             const interval = setInterval(() => {
                 seconds--;
+                localStorage.setItem(timerKey, seconds);
 
                 if (seconds <= 0) {
                     clearInterval(interval);
@@ -151,6 +162,7 @@
 
                     if (!submitted) {
                         submitted = true;
+                        localStorage.removeItem(timerKey);
                         timeoutForm.submit();
                     }
 
@@ -159,6 +171,10 @@
 
                 timerEl.textContent = formatTime(seconds);
             }, 1000);
+
+            answerForm.addEventListener('submit', () => {
+                localStorage.removeItem(timerKey);
+            });
         </script>
     @endif
 </x-mobile-shell>
