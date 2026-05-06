@@ -23,7 +23,7 @@
             <div class="bg-white rounded-[22px] px-5 py-4 shadow-sm min-w-[105px] text-center shrink-0">
                 <div class="text-sm text-gray-400">Coins</div>
                 <div class="flex items-center justify-center gap-1 mt-1">
-                    <span class="text-xl">🪙</span>
+                    <span class="text-xl">coin</span>
                     <span class="text-4xl font-black text-green-500 leading-none">
                         {{ optional($user->profile)->coins ?? 0 }}
                     </span>
@@ -134,22 +134,6 @@
             </div>
         @endif
 
-        <div class="mt-6 grid grid-cols-3 gap-3">
-            <a href="{{ route('quests.index') }}" class="bg-white rounded-[22px] p-4 shadow-sm text-center">
-                <div class="text-3xl">🧩</div>
-                <div class="font-bold text-sm mt-2">Quest</div>
-            </a>
-
-            <a href="{{ route('shop.index') }}" class="bg-white rounded-[22px] p-4 shadow-sm text-center">
-                <div class="text-3xl">🛒</div>
-                <div class="font-bold text-sm mt-2">Shop</div>
-            </a>
-
-            <a href="{{ route('leaderboard.index') }}" class="bg-white rounded-[22px] p-4 shadow-sm text-center">
-                <div class="text-3xl">🏆</div>
-                <div class="font-bold text-sm mt-2">Rank</div>
-            </a>
-        </div>
 
         <div class="mt-6 bg-[#fff7dd] rounded-[24px] p-5 shadow-sm">
             <div class="flex items-start gap-3">
