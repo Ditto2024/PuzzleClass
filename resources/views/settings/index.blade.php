@@ -30,17 +30,6 @@
 
             <label class="bg-white rounded-[22px] p-5 shadow-sm flex items-center justify-between gap-4">
                 <div>
-                    <div class="font-bold text-lg">Background Music</div>
-                    <div class="text-sm text-gray-400">Musik latar saat bermain</div>
-                </div>
-
-                <input type="checkbox" name="music_enabled" value="1"
-                    class="w-5 h-5 shrink-0"
-                    {{ ($profile->music_enabled ?? false) ? 'checked' : '' }}>
-            </label>
-
-            <label class="bg-white rounded-[22px] p-5 shadow-sm flex items-center justify-between gap-4">
-                <div>
                     <div class="font-bold text-lg">Dark Mode</div>
                     <div class="text-sm text-gray-400">Mode gelap untuk tampilan</div>
                 </div>
@@ -65,24 +54,6 @@
                 Simpan Settings
             </button>
         </form>
-
-        <div class="mt-6 bg-white rounded-[24px] p-5 shadow-sm">
-            <h2 class="text-xl font-black">Info Item</h2>
-
-            <div class="mt-4 grid grid-cols-2 gap-3">
-                <div class="bg-yellow-50 rounded-2xl p-4 text-center">
-                    <div class="text-3xl">💡</div>
-                    <div class="font-black mt-1">{{ $profile->hints ?? 0 }}</div>
-                    <div class="text-sm text-gray-400">Hint tersedia</div>
-                </div>
-
-                <div class="bg-blue-50 rounded-2xl p-4 text-center">
-                    <div class="text-3xl">⏱️</div>
-                    <div class="font-black mt-1">{{ $profile->time_boost_15 ?? 0 }}</div>
-                    <div class="text-sm text-gray-400">+15 detik</div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <x-bottom-nav />
