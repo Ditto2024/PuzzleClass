@@ -48,11 +48,11 @@ class Profile extends Model
     }
 
     public function getAvatarUrlAttribute(): ?string
-    {
-        if (! $this->avatar) {
-            return null;
-        }
-
-        return Storage::url($this->avatar);
+{
+    if (! $this->avatar) {
+        return null;
     }
+
+    return asset($this->avatar);
+}
 }

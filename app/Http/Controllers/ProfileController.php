@@ -47,14 +47,14 @@ class ProfileController extends Controller
         }
 
         if ($request->hasFile('avatar')) {
-            if ($user->profile->avatar && Storage::exists($user->profile->avatar)) {
-                Storage::delete($user->profile->avatar);
-            }
+    $file = $request->file('avatar');
+    $filename = time() . '_' . $file->getClientOriginalName();
 
-            $path = $request->file('avatar')->store('avatars');
-            $user->profile->avatar = $path;
-            $user->profile->save();
-        }
+    $file->move(public_path('avatars'), $filename);
+
+    $user->profile->avatar = 'avatars/' . $filename;
+    $user->profile->save();
+}
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
